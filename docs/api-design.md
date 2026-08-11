@@ -152,13 +152,32 @@ Agent 不能使用通用“任意 API”工具。每项能力对应一个带 DTO
 
 ### Admin
 
+管理员权限是 `CANDIDATE`/`RECRUITER` 业务角色之外的 `PLATFORM_ADMIN` 授权。JWT 仍只保存业务角色，
+每次请求从数据库校验用户状态和管理员授权，因此禁用账号或撤权会在下一次请求时生效。
+
 | 方法 | 路径 | 说明 |
 |---|---|---|
-| GET | `/admin/reviews` | 待审核对象列表 |
-| POST | `/admin/companies/{id}/approve` | 审核通过公司 |
-| POST | `/admin/companies/{id}/reject` | 拒绝公司并记录原因 |
-| POST | `/admin/jobs/{id}/remove` | 下架职位 |
-| POST | `/admin/users/{id}/disable` | 禁用账户 |
+| GET | `/admin/me` | 服务端校验管理员会话并返回当前账号 |
+| GET | `/admin/users` | 按关键词、角色、状态和管理员权限筛选用户 |
+| GET | `/admin/users/{userId}` | 用户管理详情 |
+| POST | `/admin/users/{userId}/status` | 启用或禁用账号，使用 `expectedVersion` |
+| POST | `/admin/users/{userId}/admin-access` | 授予或撤销管理员权限，使用 `expectedVersion` |
+| GET | `/admin/company-reviews` | 公司审核队列 |
+| GET | `/admin/company-reviews/{companyId}` | 公司资料及提交人详情 |
+| POST | `/admin/companies/{companyId}/approve` | 批准公司 |
+| POST | `/admin/companies/{companyId}/reject` | 拒绝公司 |
+| POST | `/admin/companies/{companyId}/request-changes` | 要求招聘方补充资料 |
+| GET | `/admin/moderation/cases` | 社区审核记录列表 |
+| GET | `/admin/moderation/cases/{caseId}` | 社区审核记录详情 |
+| POST | `/admin/moderation/cases/{caseId}/decision` | `KEEP` 或 `REMOVE` 决策 |
+| GET | `/admin/audit-events` | 按操作者、动作、目标和时间筛选审计事件 |
+
+所有管理员写接口都要求 1–500 字符原因。用户、公司和审核记录采用整数版本做乐观并发控制；
+版本不匹配返回 `409 VERSION_CONFLICT`。用户状态、管理员授权、公司审核和社区审核与各自审计事件在同一事务内提交。
+
+招聘方资料回补接口为 `GET/PATCH /recruiter/company`。`CHANGES_REQUESTED` 公司成功修改资料后自动回到
+`PENDING`；只有 `APPROVED` 公司可以发布职位。社区模块未来通过内部 `ModerationIntakeService` 创建或累加举报，
+读取内容时通过同一服务检查 `REMOVED` 状态。
 
 ## 5. API 变更规则
 

@@ -22,6 +22,7 @@ tags:
 - name: Messages
 - name: Resume
 - name: Features
+- name: Admin
 security:
 - bearerAuth: []
 paths:
@@ -1826,6 +1827,381 @@ paths:
       x-concurrency: Require expectedVersion; compare atomically; on success increment version; mismatch returns
         409 VERSION_CONFLICT.
       x-audit: true
+  /admin/me:
+    get:
+      tags: [Admin]
+      summary: Get the current platform administrator
+      operationId: getAdminMe
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      responses:
+        '200':
+          description: Current administrator
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: List and filter user accounts
+      operationId: listAdminUsers
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      parameters:
+      - name: q
+        in: query
+        schema: {type: string}
+      - name: role
+        in: query
+        schema: {$ref: '#/components/schemas/UserRole'}
+      - name: status
+        in: query
+        schema: {$ref: '#/components/schemas/UserStatus'}
+      - name: adminAccess
+        in: query
+        schema: {type: boolean}
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: User page
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminUserListResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /admin/users/{userId}:
+    get:
+      tags: [Admin]
+      summary: Get a user account for administration
+      operationId: getAdminUser
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: User detail
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminUserResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /admin/users/{userId}/status:
+    post:
+      tags: [Admin]
+      summary: Enable or disable a user account
+      operationId: changeAdminUserStatus
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN; self-disable and final-admin disable are forbidden
+      x-audit: true
+      x-concurrency: Require expectedVersion; success increments the user version.
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/AdminUserStatusRequest'}
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminUserResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /admin/users/{userId}/admin-access:
+    post:
+      tags: [Admin]
+      summary: Grant or revoke platform admin access
+      operationId: changePlatformAdminAccess
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN; self-revoke and final-admin revoke are forbidden
+      x-audit: true
+      x-concurrency: Require expectedVersion; success increments the user version.
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/AdminAccessRequest'}
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminUserResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /admin/company-reviews:
+    get:
+      tags: [Admin]
+      summary: List company verification requests
+      operationId: listCompanyReviews
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      parameters:
+      - name: q
+        in: query
+        schema: {type: string}
+      - name: status
+        in: query
+        schema: {$ref: '#/components/schemas/CompanyVerificationStatus'}
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Company review page
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CompanyReviewListResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+  /admin/company-reviews/{companyId}:
+    get:
+      tags: [Admin]
+      summary: Get company review detail
+      operationId: getCompanyReview
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Company review detail
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CompanyReviewResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /admin/companies/{companyId}/approve:
+    post:
+      tags: [Admin]
+      summary: Approve a pending company
+      operationId: approveCompany
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      x-audit: true
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/AdminReviewDecisionRequest'}
+      responses:
+        '200':
+          description: Approved company
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CompanyReviewResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /admin/companies/{companyId}/reject:
+    post:
+      tags: [Admin]
+      summary: Reject a pending company
+      operationId: rejectCompany
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      x-audit: true
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/AdminReviewDecisionRequest'}
+      responses:
+        '200':
+          description: Rejected company
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CompanyReviewResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /admin/companies/{companyId}/request-changes:
+    post:
+      tags: [Admin]
+      summary: Request changes to a pending company
+      operationId: requestCompanyChanges
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      x-audit: true
+      parameters:
+      - name: companyId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/AdminReviewDecisionRequest'}
+      responses:
+        '200':
+          description: Company awaiting changes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CompanyReviewResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /admin/moderation/cases:
+    get:
+      tags: [Admin]
+      summary: List moderation cases
+      operationId: listModerationCases
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      x-mvp-scope: P2 foundation
+      parameters:
+      - name: q
+        in: query
+        schema: {type: string}
+      - name: sourceType
+        in: query
+        schema: {$ref: '#/components/schemas/ModerationSourceType'}
+      - name: status
+        in: query
+        schema: {$ref: '#/components/schemas/ModerationStatus'}
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Moderation page
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ModerationCaseListResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+  /admin/moderation/cases/{caseId}:
+    get:
+      tags: [Admin]
+      summary: Get moderation case detail
+      operationId: getModerationCase
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      x-mvp-scope: P2 foundation
+      parameters:
+      - name: caseId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Moderation case
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ModerationCaseResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /admin/moderation/cases/{caseId}/decision:
+    post:
+      tags: [Admin]
+      summary: Keep or remove reported content
+      operationId: decideModerationCase
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      x-mvp-scope: P2 foundation
+      x-audit: true
+      parameters:
+      - name: caseId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ModerationDecisionRequest'}
+      responses:
+        '200':
+          description: Decided moderation case
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ModerationCaseResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /admin/audit-events:
+    get:
+      tags: [Admin]
+      summary: List high-impact admin audit events
+      operationId: listAdminAuditEvents
+      x-clients: [Admin]
+      x-permission: PLATFORM_ADMIN
+      parameters:
+      - name: actorId
+        in: query
+        schema: {type: string, format: uuid}
+      - name: action
+        in: query
+        schema: {type: string}
+      - name: targetType
+        in: query
+        schema: {type: string}
+      - name: from
+        in: query
+        schema: {type: string, format: date-time}
+      - name: to
+        in: query
+        schema: {type: string, format: date-time}
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Audit event page
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminAuditEventListResponse'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
 components:
   securitySchemes:
     bearerAuth:
@@ -1914,6 +2290,182 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    UserStatus:
+      type: string
+      enum: [ACTIVE, DISABLED]
+    CompanyVerificationStatus:
+      type: string
+      enum: [PENDING, APPROVED, REJECTED, CHANGES_REQUESTED]
+    ModerationSourceType:
+      type: string
+      enum: [COMMUNITY_POST, COMMUNITY_COMMENT]
+    ModerationStatus:
+      type: string
+      enum: [PENDING, KEPT, REMOVED]
+    AdminCompanyRef:
+      type: object
+      required: [companyId, name, verificationStatus]
+      properties:
+        companyId: {type: string, format: uuid}
+        name: {type: string}
+        verificationStatus: {$ref: '#/components/schemas/CompanyVerificationStatus'}
+    AdminUser:
+      type: object
+      required: [userId, fullName, email, role, status, adminAccess, version, createdAt, updatedAt]
+      properties:
+        userId: {type: string, format: uuid}
+        fullName: {type: string}
+        email: {type: string, format: email}
+        role: {$ref: '#/components/schemas/UserRole'}
+        status: {$ref: '#/components/schemas/UserStatus'}
+        adminAccess: {type: boolean}
+        company:
+          oneOf:
+          - $ref: '#/components/schemas/AdminCompanyRef'
+          - type: 'null'
+        version: {type: integer, minimum: 1}
+        createdAt: {type: string, format: date-time}
+        updatedAt: {type: string, format: date-time}
+    AdminUserResponse:
+      type: object
+      required: [data]
+      properties:
+        data: {$ref: '#/components/schemas/AdminUser'}
+    AdminUserListResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items: {$ref: '#/components/schemas/AdminUser'}
+        meta: {$ref: '#/components/schemas/PageMeta'}
+    AdminUserStatusRequest:
+      type: object
+      additionalProperties: false
+      required: [status, reason, expectedVersion]
+      properties:
+        status: {$ref: '#/components/schemas/UserStatus'}
+        reason: {type: string, minLength: 1, maxLength: 500, pattern: '^.*\S.*$'}
+        expectedVersion: {type: integer, minimum: 1}
+    AdminAccessRequest:
+      type: object
+      additionalProperties: false
+      required: [enabled, reason, expectedVersion]
+      properties:
+        enabled: {type: boolean}
+        reason: {type: string, minLength: 1, maxLength: 500, pattern: '^.*\S.*$'}
+        expectedVersion: {type: integer, minimum: 1}
+    CompanyReview:
+      type: object
+      required: [companyId, name, verificationStatus, version, createdByUserId, createdByName, createdAt, updatedAt]
+      properties:
+        companyId: {type: string, format: uuid}
+        name: {type: string}
+        logoUrl:
+          oneOf: [{type: string, format: uri}, {type: 'null'}]
+        stage:
+          oneOf: [{type: string}, {type: 'null'}]
+        employeeRange:
+          oneOf: [{type: string}, {type: 'null'}]
+        verificationStatus: {$ref: '#/components/schemas/CompanyVerificationStatus'}
+        website:
+          oneOf: [{type: string, format: uri}, {type: 'null'}]
+        description:
+          oneOf: [{type: string}, {type: 'null'}]
+        location:
+          oneOf: [{type: string}, {type: 'null'}]
+        version: {type: integer, minimum: 1}
+        createdByUserId: {type: string, format: uuid}
+        createdByName: {type: string}
+        createdByEmail:
+          oneOf: [{type: string, format: email}, {type: 'null'}]
+        createdAt: {type: string, format: date-time}
+        updatedAt: {type: string, format: date-time}
+    CompanyReviewResponse:
+      type: object
+      required: [data]
+      properties:
+        data: {$ref: '#/components/schemas/CompanyReview'}
+    CompanyReviewListResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items: {$ref: '#/components/schemas/CompanyReview'}
+        meta: {$ref: '#/components/schemas/PageMeta'}
+    AdminReviewDecisionRequest:
+      type: object
+      additionalProperties: false
+      required: [reason, expectedVersion]
+      properties:
+        reason: {type: string, minLength: 1, maxLength: 500, pattern: '^.*\S.*$'}
+        expectedVersion: {type: integer, minimum: 1}
+    ModerationCase:
+      type: object
+      required: [caseId, sourceType, sourceId, contentSnapshot, reportReason, reportCount, status, version, createdAt, updatedAt]
+      properties:
+        caseId: {type: string, format: uuid}
+        sourceType: {$ref: '#/components/schemas/ModerationSourceType'}
+        sourceId: {type: string, format: uuid}
+        authorId:
+          oneOf: [{type: string, format: uuid}, {type: 'null'}]
+        authorName:
+          oneOf: [{type: string}, {type: 'null'}]
+        contentSnapshot: {type: string}
+        reportReason: {type: string}
+        reportCount: {type: integer, minimum: 1}
+        status: {$ref: '#/components/schemas/ModerationStatus'}
+        version: {type: integer, minimum: 1}
+        createdAt: {type: string, format: date-time}
+        updatedAt: {type: string, format: date-time}
+    ModerationCaseResponse:
+      type: object
+      required: [data]
+      properties:
+        data: {$ref: '#/components/schemas/ModerationCase'}
+    ModerationCaseListResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items: {$ref: '#/components/schemas/ModerationCase'}
+        meta: {$ref: '#/components/schemas/PageMeta'}
+    ModerationDecisionRequest:
+      type: object
+      additionalProperties: false
+      required: [decision, reason, expectedVersion]
+      properties:
+        decision: {type: string, enum: [KEEP, REMOVE]}
+        reason: {type: string, minLength: 1, maxLength: 500, pattern: '^.*\S.*$'}
+        expectedVersion: {type: integer, minimum: 1}
+    AdminAuditEvent:
+      type: object
+      required: [auditEventId, actorName, action, targetType, targetId, reason, requestId, occurredAt]
+      properties:
+        auditEventId: {type: string, format: uuid}
+        actorId:
+          oneOf: [{type: string, format: uuid}, {type: 'null'}]
+        actorName: {type: string}
+        action: {type: string}
+        targetType: {type: string}
+        targetId: {type: string}
+        beforeState:
+          oneOf: [{type: string}, {type: 'null'}]
+        afterState:
+          oneOf: [{type: string}, {type: 'null'}]
+        reason: {type: string}
+        requestId: {type: string}
+        occurredAt: {type: string, format: date-time}
+    AdminAuditEventListResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items: {$ref: '#/components/schemas/AdminAuditEvent'}
+        meta: {$ref: '#/components/schemas/PageMeta'}
     RegisterRequest:
       oneOf:
       - $ref: '#/components/schemas/CandidateRegisterRequest'
@@ -1950,7 +2502,14 @@ components:
       allOf:
       - $ref: '#/components/schemas/User'
       - type: object
+        required:
+        - permissions
         properties:
+          permissions:
+            type: array
+            items:
+              type: string
+              enum: [PLATFORM_ADMIN]
           company:
             oneOf:
             - $ref: '#/components/schemas/Company'
@@ -2051,6 +2610,7 @@ components:
             - PENDING
             - APPROVED
             - REJECTED
+            - CHANGES_REQUESTED
           - type: 'null'
         website:
           oneOf:
@@ -3099,17 +3659,24 @@ components:
       properties:
         name:
           type: string
+          maxLength: 200
+        logoUrl:
+          type: string
+          format: uri
+        stage:
+          type: string
+          maxLength: 32
+        employeeRange:
+          type: string
+          maxLength: 50
         website:
           type: string
           format: uri
         description:
           type: string
-        logoAssetId:
-          type: string
-          description: Reserved for the post-MVP Asset API. MVP clients MUST omit this field; Company.logoUrl remains
-            null.
         location:
           type: string
+          maxLength: 100
         expectedVersion:
           type: integer
           minimum: 1

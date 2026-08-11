@@ -60,3 +60,26 @@ mvn package
 ```
 
 测试套件始终使用隔离的 H2 MySQL 兼容模式执行 Auth HTTP 集成测试；Docker 可用时还会通过 Testcontainers MySQL 8.4 验证空库迁移。
+
+## 管理员系统本地运行
+
+管理员不是第三种业务角色。先按 Candidate 或 Recruiter 正常注册账号，再在第一次启动后设置
+`ADMIN_BOOTSTRAP_EMAIL` 为该账号邮箱。系统仅在没有有效管理员时授予 `PLATFORM_ADMIN` 权限，
+不会创建账号或保存默认密码；授权落库后可以移除这个环境变量。
+
+```powershell
+$env:ADMIN_BOOTSTRAP_EMAIL="your-registered-email@example.com"
+cd backend
+mvn spring-boot:run
+```
+
+前端使用另一个终端启动：
+
+```powershell
+cd web
+npm install
+npm run dev
+```
+
+浏览器打开 `http://localhost:5173/admin/sign-in`。管理员工作区包含用户与权限、公司审核、社区审核基础和审计日志；
+`/admin/me` 会在进入工作区时再次从服务端校验授权。完整接口契约见 [OpenAPI](docs/openapi-v1.yaml)。

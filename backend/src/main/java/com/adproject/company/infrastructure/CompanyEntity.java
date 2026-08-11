@@ -64,6 +64,29 @@ public class CompanyEntity {
     public String getDescription() { return description; }
     public String getLocation() { return location; }
     public int getVersion() { return version; }
+    public String getCreatedBy() { return createdBy; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
+
+    public void changeVerificationStatus(CompanyVerificationStatus status, Instant now) {
+        this.verificationStatus = status;
+        this.updatedAt = now;
+        this.version++;
+    }
+
+    public void updateProfile(String name, String logoUrl, String stage, String employeeRange,
+                              String website, String description, String location, Instant now) {
+        this.name = name;
+        this.logoUrl = logoUrl;
+        this.stage = stage;
+        this.employeeRange = employeeRange;
+        this.website = website;
+        this.description = description;
+        this.location = location;
+        if (verificationStatus == CompanyVerificationStatus.CHANGES_REQUESTED) {
+            verificationStatus = CompanyVerificationStatus.PENDING;
+        }
+        this.updatedAt = now;
+        this.version++;
+    }
 }

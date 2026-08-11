@@ -40,6 +40,6 @@ public class JwtService {
     public AuthenticatedUser parse(String token) {
         Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
         return new AuthenticatedUser(claims.getSubject(),
-                com.adproject.user.domain.UserRole.valueOf(claims.get("role", String.class)));
+                com.adproject.user.domain.UserRole.valueOf(claims.get("role", String.class)), false);
     }
 }

@@ -23,6 +23,8 @@ server:
   port: ${SERVER_PORT:8080}
 
 app:
+  admin:
+    bootstrap-email: ${ADMIN_BOOTSTRAP_EMAIL:}
   auth:
     access-token-seconds: 7200
     refresh-token-seconds: 2592000

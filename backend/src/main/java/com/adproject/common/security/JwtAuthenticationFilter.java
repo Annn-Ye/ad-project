@@ -1,5 +1,6 @@
 package com.adproject.common.security;
 
+import com.adproject.admin.infrastructure.AdminGrantRepository;
 import com.adproject.auth.application.JwtService;
 import com.adproject.user.domain.UserStatus;
 import com.adproject.user.infrastructure.UserRepository;
@@ -20,11 +21,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final AdminGrantRepository adminGrantRepository;
     private final SecurityErrorWriter errorWriter;
 
-    public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository, SecurityErrorWriter errorWriter) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository,
+                                   AdminGrantRepository adminGrantRepository, SecurityErrorWriter errorWriter) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
+        this.adminGrantRepository = adminGrantRepository;
         this.errorWriter = errorWriter;
     }
 
@@ -42,8 +46,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (user.getStatus() != UserStatus.ACTIVE || user.getRole() != parsed.role()) {
                 throw new IllegalArgumentException("Inactive or mismatched account");
             }
-            var authentication = new UsernamePasswordAuthenticationToken(parsed, null,
-                    List.of(new SimpleGrantedAuthority("ROLE_" + parsed.role().name())));
+            boolean platformAdmin = adminGrantRepository.existsByUserIdAndActiveTrue(parsed.userId());
+            AuthenticatedUser principal = new AuthenticatedUser(parsed.userId(), parsed.role(), platformAdmin);
+            var authorities = new java.util.ArrayList<SimpleGrantedAuthority>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + parsed.role().name()));
+            if (platformAdmin) authorities.add(new SimpleGrantedAuthority("ROLE_PLATFORM_ADMIN"));
+            var authentication = new UsernamePasswordAuthenticationToken(principal, null, List.copyOf(authorities));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request, response);
         } catch (Exception exception) {

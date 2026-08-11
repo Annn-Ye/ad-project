@@ -1,5 +1,6 @@
 package com.adproject.auth.application;
 
+import com.adproject.admin.infrastructure.AdminGrantRepository;
 import com.adproject.auth.api.AuthResponses.AuthData;
 import com.adproject.auth.api.AuthResponses.AuthResponse;
 import com.adproject.auth.api.AuthResponses.AuthUser;
@@ -23,6 +24,7 @@ import com.adproject.user.infrastructure.UserRepository;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,7 @@ public class AuthService {
     private final CompanyRepository companyRepository;
     private final CompanyMemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AdminGrantRepository adminGrantRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
@@ -47,12 +50,14 @@ public class AuthService {
 
     public AuthService(UserRepository userRepository, CompanyRepository companyRepository,
                        CompanyMemberRepository memberRepository, RefreshTokenRepository refreshTokenRepository,
+                       AdminGrantRepository adminGrantRepository,
                        PasswordEncoder passwordEncoder, JwtService jwtService,
                        RefreshTokenService refreshTokenService, Clock clock) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
         this.memberRepository = memberRepository;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.adminGrantRepository = adminGrantRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.refreshTokenService = refreshTokenService;
@@ -147,8 +152,10 @@ public class AuthService {
     }
 
     private AuthUser toAuthUser(UserEntity user, CompanyEntity company) {
+        List<String> permissions = adminGrantRepository.existsByUserIdAndActiveTrue(user.getId())
+                ? List.of("PLATFORM_ADMIN") : List.of();
         return new AuthUser(user.getId(), user.getRole().name(), user.getFullName(), user.getEmail(), user.getAvatarUrl(),
-                user.getCreatedAt(), user.getUpdatedAt(), toCompany(company));
+                user.getCreatedAt(), user.getUpdatedAt(), permissions, toCompany(company));
     }
 
     private Company toCompany(CompanyEntity company) {
@@ -163,7 +170,9 @@ public class AuthService {
 
     private static UserRole parsePublicRole(String rawRole) {
         try {
-            return UserRole.valueOf(rawRole);
+            UserRole role = UserRole.valueOf(rawRole);
+            if (role != UserRole.CANDIDATE && role != UserRole.RECRUITER) throw new IllegalArgumentException();
+            return role;
         } catch (RuntimeException exception) {
             throw validation("role", "must be CANDIDATE or RECRUITER");
         }

@@ -46,6 +46,9 @@ public class UserEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(nullable = false)
+    private int version;
+
     protected UserEntity() {}
 
     public UserEntity(String id, String email, String passwordHash, String fullName, UserRole role,
@@ -59,6 +62,7 @@ public class UserEntity {
         this.acceptedTermsVersion = acceptedTermsVersion;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.version = 1;
     }
 
     public String getId() { return id; }
@@ -70,9 +74,21 @@ public class UserEntity {
     public String getAvatarUrl() { return avatarUrl; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
+    public int getVersion() { return version; }
 
     public void updateFullName(String fullName, Instant now) {
         this.fullName = fullName;
         this.updatedAt = now;
+        this.version++;
+    }
+
+    public void changeStatus(UserStatus status, Instant now) {
+        this.status = status;
+        touch(now);
+    }
+
+    public void touch(Instant now) {
+        this.updatedAt = now;
+        this.version++;
     }
 }
