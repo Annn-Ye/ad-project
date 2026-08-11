@@ -1,0 +1,76 @@
+.loading-skeleton {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.loading-skeleton i {
+  display: block;
+  height: 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #edf1f2 25%, #f8fafa 50%, #edf1f2 75%);
+  background-size: 200% 100%;
+  animation: admin-skeleton 1.15s ease-in-out infinite;
+}
+
+.loading-skeleton i:nth-child(2) { width: 84%; }
+.loading-skeleton i:nth-child(3) { width: 62%; }
+
+@keyframes admin-skeleton {
+  to { background-position: -200% 0; }
+}
+
+.admin-page-notice {
+  min-height: 42px;
+  margin: -4px 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #cbe5e2;
+  border-radius: 10px;
+  background: #edf9f7;
+  color: #245b59;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-page-notice button {
+  border: 0;
+  background: transparent;
+  color: #245b59;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.admin-check input {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  min-height: 14px;
+  padding: 0;
+  flex: 0 0 auto;
+  accent-color: #079a96;
+}
+
+.state-card.error small {
+  font-size: 9px;
+  color: #8e3b3b;
+}
+
+@media (max-width: 900px) {
+  .admin-directory-layout > * {
+    min-width: 0;
+  }
+
+  .admin-table-card {
+    overflow: hidden;
+  }
+
+  .admin-table {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}

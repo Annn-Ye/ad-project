@@ -19,18 +19,19 @@ const recruiter = {
   fullName: 'River Recruiter',
   email: 'river@example.com',
   avatarUrl: null,
+  permissions: [],
   company: {companyId: '22222222-2222-2222-2222-222222222222', name: 'River Labs'},
   createdAt: '2026-08-10T01:00:00Z',
   updatedAt: '2026-08-10T01:00:00Z',
 };
 
-function authEnvelope(role = 'RECRUITER') {
+function authEnvelope(role = 'RECRUITER', permissions: string[] = []) {
   return {data: {
     accessToken: 'access-one',
     refreshToken: 'refresh-one',
     expiresIn: 7200,
     refreshExpiresIn: 2592000,
-    user: {...recruiter, role, company: role === 'RECRUITER' ? recruiter.company : null},
+    user: {...recruiter, role, permissions, company: role === 'RECRUITER' ? recruiter.company : null},
   }};
 }
 
@@ -93,6 +94,28 @@ describe('AuthClient', () => {
       url: '/api/v1/auth/login',
       body: {email: recruiter.email, password: 'Password1!'},
     });
+  });
+
+  it('signs in a platform admin without changing the candidate business role', async () => {
+    const fetcher = vi.fn().mockResolvedValue(json(authEnvelope('CANDIDATE', ['PLATFORM_ADMIN'])));
+    const {client, sessions} = setup(fetcher);
+
+    const user = await client.signInAdmin({email: recruiter.email, password: 'Password1!', remember: false});
+
+    expect(user).toMatchObject({role: 'CANDIDATE', permissions: ['PLATFORM_ADMIN'], company: null});
+    expect(sessions.getSnapshot()?.user).toEqual(user);
+  });
+
+  it('rejects the admin portal login when the database-backed permission is absent', async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(json(authEnvelope('CANDIDATE')))
+      .mockResolvedValueOnce(new Response(null, {status: 204}));
+    const {client, sessions} = setup(fetcher);
+
+    await expect(client.signInAdmin({email: recruiter.email, password: 'Password1!', remember: false}))
+      .rejects.toMatchObject({status: 403, code: 'WRONG_ROLE'});
+
+    expect(sessions.getSnapshot()).toBeNull();
+    expect(requestAt(fetcher, 1).url).toBe('/api/v1/auth/logout');
   });
 
   it('registers a recruiter with the exact role, company, and terms fields', async () => {
@@ -186,6 +209,17 @@ describe('AuthClient', () => {
     await expect(client.requestWithAuth('/protected')).rejects.toMatchObject({code: 'SESSION_EXPIRED'});
 
     expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(sessions.getSnapshot()).toBeNull();
+  });
+
+  it('clears the session when database-backed admin access has been revoked', async () => {
+    const fetcher = vi.fn().mockResolvedValue(json(errorEnvelope('FORBIDDEN', 'Insufficient permission'), 403));
+    const {client, sessions} = setup(fetcher);
+    sessions.save(session());
+
+    await expect(client.requestWithAuth('/admin/users')).rejects.toMatchObject({status: 403, code: 'FORBIDDEN'});
+
+    expect(fetcher).toHaveBeenCalledTimes(1);
     expect(sessions.getSnapshot()).toBeNull();
   });
 

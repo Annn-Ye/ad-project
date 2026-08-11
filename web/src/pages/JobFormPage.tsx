@@ -43,7 +43,7 @@ export function JobFormPage() {
   }
 
   const mutationPending = create.isPending || update.isPending;
-  const companyName = currentJob?.company.name ?? authSession.getSnapshot()?.user.company.name ?? 'Your company';
+  const companyName = currentJob?.company.name ?? authSession.getSnapshot()?.user.company?.name ?? 'Your company';
   const set = <K extends keyof JobDraft>(key: K, value: JobDraft[K]) => setForm(current => ({...current, [key]: value}));
 
   const validate = () => {

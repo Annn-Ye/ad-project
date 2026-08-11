@@ -13,7 +13,9 @@ export function AppShell({client = authClient, sessions = authSession}: {
   const session = useSyncExternalStore(sessions.subscribe, sessions.getSnapshot);
   const [loggingOut, setLoggingOut] = useState(false);
 
-  if (!session) return <Navigate to="/recruiter/sign-in" replace/>;
+  if (!session || session.user.role !== 'RECRUITER' || !session.user.company) {
+    return <Navigate to="/recruiter/sign-in" replace/>;
+  }
 
   const logout = async () => {
     if (loggingOut) return;
@@ -29,6 +31,7 @@ export function AppShell({client = authClient, sessions = authSession}: {
   };
 
   const recruiter = session.user;
+  const company = recruiter.company!;
   return <main className="app-shell">
     <header className="topnav">
       <NavLink className="brand" to="/recruiter/dashboard">AD Recruiter</NavLink>
@@ -40,7 +43,7 @@ export function AppShell({client = authClient, sessions = authSession}: {
       </nav>
       <div className="account">
         <span className="avatar">{recruiter.fullName.slice(0, 1).toUpperCase()}</span>
-        <span><b>{recruiter.fullName}</b><small>{recruiter.company.name}</small></span>
+        <span><b>{recruiter.fullName}</b><small>{company.name}</small></span>
         <button className="text-button" disabled={loggingOut} onClick={logout}>
           {loggingOut ? 'Signing out…' : 'Sign out'}
         </button>

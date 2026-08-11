@@ -1,6 +1,7 @@
 import {API_BASE_URL, apiPaths} from './contract';
 import {
   authSession,
+  type AuthenticatedUser,
   type AuthenticatedRecruiter,
   type AuthSession,
   type AuthSessionStore,
@@ -24,6 +25,7 @@ interface AuthIdentity {
   fullName: string;
   email: string;
   avatarUrl: string | null;
+  permissions: string[];
   company: {companyId: string; name: string} | null;
   createdAt: string;
   updatedAt: string;
@@ -87,6 +89,23 @@ export class AuthClient {
     return this.acceptRecruiter(auth, input.remember);
   }
 
+  async signInAdmin(input: SignInInput): Promise<AuthenticatedUser> {
+    this.sessions.clear();
+    const response = await this.send(apiPaths.login, {
+      method: 'POST',
+      body: JSON.stringify({email: input.email, password: input.password}),
+    });
+    const auth = await this.readAuthResponse(response);
+    if (!auth.user.permissions.includes('PLATFORM_ADMIN')) {
+      await this.revokeIssuedTokens(auth);
+      this.sessions.clear();
+      throw new AuthApiError(403, 'WRONG_ROLE', 'This account cannot access the admin workspace.');
+    }
+    const user = this.toAuthenticatedUser(auth.user);
+    this.sessions.save({...this.toStoredTokens(auth), user, remember: input.remember});
+    return user;
+  }
+
   async register(input: RegisterRecruiterInput): Promise<AuthenticatedRecruiter> {
     this.sessions.clear();
     const response = await this.send(apiPaths.register, {
@@ -135,6 +154,9 @@ export class AuthClient {
         throw new AuthApiError(401, 'SESSION_EXPIRED', 'Your session has expired. Please sign in again.');
       }
     }
+    if (response.status === 403 && (path === '/admin' || path.startsWith('/admin/'))) {
+      this.sessions.clear();
+    }
     if (!response.ok) await this.throwApiError(response);
     if (response.status === 204) return undefined as T;
     return this.readJson<T>(response);
@@ -175,10 +197,20 @@ export class AuthClient {
     const user: AuthenticatedRecruiter = {
       ...auth.user,
       role: 'RECRUITER',
+      permissions: auth.user.permissions.filter(permission => permission === 'PLATFORM_ADMIN') as ['PLATFORM_ADMIN'] | [],
       company: auth.user.company,
     };
     this.sessions.save({...this.toStoredTokens(auth), user, remember});
     return user;
+  }
+
+  private toAuthenticatedUser(identity: AuthIdentity): AuthenticatedUser {
+    if (identity.role !== 'CANDIDATE' && identity.role !== 'RECRUITER') throw unexpectedResponse();
+    return {
+      ...identity,
+      role: identity.role,
+      permissions: identity.permissions.filter(permission => permission === 'PLATFORM_ADMIN') as ['PLATFORM_ADMIN'] | [],
+    };
   }
 
   private async revokeIssuedTokens(auth: AuthData): Promise<void> {
@@ -263,6 +295,8 @@ function parseAuthEnvelope(payload: unknown): AuthData {
   if (!isRecord(user) || typeof user.userId !== 'string' || typeof user.role !== 'string' ||
       typeof user.fullName !== 'string' || typeof user.email !== 'string' ||
       !(typeof user.avatarUrl === 'string' || user.avatarUrl === null) ||
+      !(user.permissions === undefined || (Array.isArray(user.permissions) &&
+        user.permissions.every(permission => typeof permission === 'string'))) ||
       typeof user.createdAt !== 'string' || typeof user.updatedAt !== 'string') {
     throw unexpectedResponse();
   }
@@ -279,6 +313,7 @@ function parseAuthEnvelope(payload: unknown): AuthData {
     fullName: user.fullName,
     email: user.email,
     avatarUrl: user.avatarUrl,
+    permissions: (user.permissions ?? []) as string[],
     company,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,

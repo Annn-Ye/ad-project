@@ -3,15 +3,24 @@ export interface AuthCompany {
   name: string;
 }
 
-export interface AuthenticatedRecruiter {
+export type BusinessRole = 'CANDIDATE' | 'RECRUITER';
+export type Permission = 'PLATFORM_ADMIN';
+
+export interface AuthenticatedUser {
   userId: string;
-  role: 'RECRUITER';
+  role: BusinessRole;
   fullName: string;
   email: string;
   avatarUrl: string | null;
-  company: AuthCompany;
+  permissions: Permission[];
+  company: AuthCompany | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AuthenticatedRecruiter extends AuthenticatedUser {
+  role: 'RECRUITER';
+  company: AuthCompany;
 }
 
 export interface AuthSession {
@@ -19,7 +28,7 @@ export interface AuthSession {
   refreshToken: string;
   accessTokenExpiresAt: number;
   refreshTokenExpiresAt: number;
-  user: AuthenticatedRecruiter;
+  user: AuthenticatedUser;
   remember: boolean;
 }
 
@@ -82,7 +91,10 @@ export class AuthSessionStore {
     try {
       const parsed: unknown = JSON.parse(value);
       if (!isAuthSession(parsed)) throw new Error('Invalid stored session');
-      return parsed;
+      return {...parsed, user: {
+        ...parsed.user,
+        permissions: Array.isArray(parsed.user.permissions) ? parsed.user.permissions : [],
+      }};
     } catch {
       this.sessionStorage.removeItem(SESSION_KEY);
       this.persistentStorage.removeItem(SESSION_KEY);
@@ -99,10 +111,13 @@ function isAuthSession(value: unknown): value is AuthSession {
   if (!isRecord(value) || typeof value.accessToken !== 'string' || typeof value.refreshToken !== 'string') return false;
   if (typeof value.accessTokenExpiresAt !== 'number' || typeof value.refreshTokenExpiresAt !== 'number') return false;
   if (typeof value.remember !== 'boolean' || !isRecord(value.user)) return false;
-  return value.user.role === 'RECRUITER' && typeof value.user.userId === 'string' &&
+  return (value.user.role === 'RECRUITER' || value.user.role === 'CANDIDATE') &&
+    typeof value.user.userId === 'string' &&
     typeof value.user.fullName === 'string' && typeof value.user.email === 'string' &&
-    isRecord(value.user.company) && typeof value.user.company.companyId === 'string' &&
-    typeof value.user.company.name === 'string';
+    (value.user.permissions === undefined || (Array.isArray(value.user.permissions) &&
+      value.user.permissions.every(permission => permission === 'PLATFORM_ADMIN'))) &&
+    (value.user.company === null || (isRecord(value.user.company) &&
+      typeof value.user.company.companyId === 'string' && typeof value.user.company.name === 'string'));
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
