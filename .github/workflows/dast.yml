@@ -136,6 +136,26 @@ jobs:
           echo "recruiter token length: ${#RECRUITER_TOKEN}"
           echo "CANDIDATE_TOKEN=$CANDIDATE_TOKEN" >> "$GITHUB_ENV"
           echo "RECRUITER_TOKEN=$RECRUITER_TOKEN" >> "$GITHUB_ENV"
+      - name: seed admin account and capture admin token
+        id: admin-token
+        run: |
+          set -e
+          curl -s -o /dev/null -w 'register admin: %{http_code}\n' -X POST http://localhost:8080/api/v1/auth/register \
+            -H 'Content-Type: application/json' \
+            -d '{"role":"CANDIDATE","fullName":"DAST Admin","email":"dast-admin@example.com","password":"DastPass123!","acceptedTermsVersion":"1"}'
+          ADMIN_BOOTSTRAP_EMAIL=dast-admin@example.com \
+            docker compose -f docker-compose.yml -f docker-compose.dast.yml up -d --force-recreate backend
+          for i in $(seq 1 90); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:8080/api/v1/auth/login -H 'Content-Type: application/json' -d '{}' || true)
+            if [ "$code" != "000" ]; then break; fi
+            sleep 5
+          done
+          curl -s -o /dev/null -w 'admin backend ready: %{http_code}\n' -X POST http://localhost:8080/api/v1/auth/login -H 'Content-Type: application/json' -d '{}'
+          ADMIN_TOKEN=$(curl -s -X POST http://localhost:8080/api/v1/auth/login \
+            -H 'Content-Type: application/json' \
+            -d '{"email":"dast-admin@example.com","password":"DastPass123!"}' | jq -r '.data.accessToken')
+          echo "admin token length: ${#ADMIN_TOKEN}"
+          echo "ADMIN_TOKEN=$ADMIN_TOKEN" >> "$GITHUB_ENV"
       - name: ZAP API scan (anonymous)
         id: api-anonymous
         continue-on-error: true
@@ -207,6 +227,31 @@ jobs:
             report_json.json
             report_md.md
           if-no-files-found: ignore
+      - name: ZAP API scan (admin)
+        id: api-admin
+        continue-on-error: true
+        uses: zaproxy/action-api-scan@v0.10.0
+        env:
+          ZAP_AUTH_HEADER: Authorization
+          ZAP_AUTH_HEADER_VALUE: Bearer ${{ env.ADMIN_TOKEN }}
+          ZAP_AUTH_HEADER_SITE: http://localhost:8080
+        with:
+          target: /zap/wrk/docs/openapi-v1.yaml
+          format: openapi
+          rules_file_name: .zap/rules.tsv
+          cmd_options: -z "-config api.disablekey=true"
+          artifact_name: zap-api-admin
+          allow_issue_writing: false
+      - name: upload ZAP API report (admin)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-api-admin-report
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
+          if-no-files-found: ignore
       - name: ZAP full scan (web, AJAX spider for SPA)
         id: zap-full
         continue-on-error: true
@@ -234,6 +279,7 @@ jobs:
             "${{ steps.api-anonymous.outcome }}"
             "${{ steps.api-candidate.outcome }}"
             "${{ steps.api-recruiter.outcome }}"
+            "${{ steps.api-admin.outcome }}"
             "${{ steps.zap-full.outcome }}"
           )
           failed=0
