@@ -157,13 +157,39 @@ Candidates and recruiters can register, sign in and reset a password using a ver
 
 Recruiters manage their company profile, create and publish jobs, review candidate applications, use Candidate Fit and AI-assisted ranking, communicate with candidates and schedule online, on-site or phone interviews. Google Calendar/Meet is an optional integration that becomes available after the recruiter connects a Google account.
 
+#### Track recruitment activity and manage job postings
+
+The Recruiter Dashboard summarises active roles, incoming applications, reviews, interviews and company-verification status. Recruiters can then create a job, manage its publication state and inspect its applicant count from the job-management workspace.
+
+| Recruitment dashboard | Job management |
+| --- | --- |
+| ![Recruiter dashboard](material/Screenshots%20of%20working%20features/View%20Recruitment%20Dashboard/recruitment%20dashboard.png) | ![Recruiter job management](material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/job%20page.png) |
+
+![Recruiter creates a job posting](material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/create%20job.png)
+
+#### Manage company information and candidate outreach
+
+Recruiters maintain the public company profile that candidates see on job details, and can open a direct conversation with a prospective candidate to support proactive outreach as well as application-related communication.
+
+| Company profile | Recruiter-to-candidate conversation |
+| --- | --- |
+| ![Recruiter company profile](material/Screenshots%20of%20working%20features/Manage%20Company%20Profile/company%20profile.png) | ![Recruiter candidate conversation](material/Screenshots%20of%20working%20features/Communicate%20with%20Candidates/communicate%20details.png) |
+
+#### Discover and screen candidates with AI assistance
+
+Recruiters can browse recommended candidates for a role, review the ranking signal and message a promising candidate. The HR Agent can also screen candidates for a selected job and presents ranked results before any follow-up action is taken.
+
+| Candidate discovery and ranking | HR Agent screening result |
+| --- | --- |
+| ![Recruiter candidate ranking](material/Screenshots%20of%20working%20features/Discover%20and%20Rank%20Candidates/discover%20%26%20rank%20candidates.png) | ![Recruiter Agent candidate screening](material/Screenshots%20of%20working%20features/Recruiter%20AI%20Screening%20and%20Interview%20Agent/use%20agent%20to%20find%20candidate.png) |
+
 #### Manage the candidate pipeline
 
 The application detail page gives recruiters one place to review the submitted resume, progress candidates through **Submitted → Review → Interview → Outcome**, inspect the AI Candidate Fit result and contact the candidate directly.
 
 | Application review and progression | Schedule an interview |
 | --- | --- |
-| ![Recruiter application review](material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Review%20application.png) | ![Recruiter interview scheduling](material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Schedule%20interview.png) |
+| ![Recruiter application review](material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Review%20application.png) | ![Recruiter interview scheduling](material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%202.png) |
 
 #### Interview and offer workflow
 
