@@ -26,6 +26,21 @@ android/app/build/
 android/build/
 web/coverage/
 
+# Generated frontend output and local release artifacts.
+# Docker builds the web bundle from source, so these do not belong in Git.
+web/dist/
+*.apk*
+*.aab
+
+# Local collaboration evidence and planning records are retained outside the
+# source submission; functional screenshots live under material/ instead.
+work/
+change_report/
+tasks/
+
+# OAuth client downloads are local secrets, never repository assets.
+client_secret*.json
+
 # Local ML datasets and generated artifacts. Keep scripts, fixtures, and reports tracked.
 datasets/*.csv
 datasets/*.parquet
