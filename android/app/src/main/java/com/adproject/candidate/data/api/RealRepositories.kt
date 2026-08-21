@@ -527,6 +527,8 @@ data class DownloadedAttachment(val bytes: ByteArray, val contentType: String)
 interface CandidateConversationRepository {
     suspend fun conversations(): ApiResult<ConversationListResult>
     suspend fun conversation(conversationId: String): ApiResult<ConversationDetail>
+    suspend fun startInquiry(jobId: String): ApiResult<ConversationDetail> =
+        ApiResult.Failure("Messaging is unavailable right now.")
     suspend fun messages(conversationId: String, before: String? = null): ApiResult<MessageListResult>
     suspend fun sendMessage(conversationId: String, idempotencyKey: String, request: SendMessageRequest): ApiResult<Message>
     suspend fun sendMessageWithAttachment(conversationId: String, idempotencyKey: String, request: AttachmentUpload): ApiResult<Message>
@@ -560,6 +562,17 @@ class RealCandidateConversationRepository(
         ApiResult.Failure("Unable to load this conversation. Check your network and try again.")
     } catch (_: Exception) {
         ApiResult.Failure("Unable to load this conversation right now.")
+    }
+
+    override suspend fun startInquiry(jobId: String): ApiResult<ConversationDetail> = try {
+        val response = api.startInquiry(jobId)
+        val data = response.body()?.data
+        if (response.isSuccessful && data != null) ApiResult.Success(data)
+        else conversationFailure(response.code(), response.errorBody()?.string())
+    } catch (_: IOException) {
+        ApiResult.Failure("Unable to start this conversation. Check your network and try again.")
+    } catch (_: Exception) {
+        ApiResult.Failure("Unable to start this conversation right now.")
     }
 
     override suspend fun messages(conversationId: String, before: String?): ApiResult<MessageListResult> = try {

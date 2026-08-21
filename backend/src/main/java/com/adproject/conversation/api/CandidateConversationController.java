@@ -47,6 +47,13 @@ public class CandidateConversationController {
         return service.detailCandidate(user, conversationId);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/job/{jobId}")
+    ConversationDtos.DetailResponse startInquiry(@AuthenticationPrincipal AuthenticatedUser user,
+                                                  @PathVariable String jobId) {
+        return service.startCandidateInquiry(user, jobId);
+    }
+
     @GetMapping("/{conversationId}/messages")
     ConversationDtos.MessageListResponse messages(@AuthenticationPrincipal AuthenticatedUser user,
             @PathVariable String conversationId,

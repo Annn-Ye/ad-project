@@ -93,9 +93,17 @@ public class CandidateResumeService {
             throw validation(Map.of("age", "must be between 16 and 100"));
         }
         var existing = ownedForUpdate(principal, resumeId, expectedVersion);
+        var profile = profiles.findByUserIdForUpdate(principal.userId()).orElse(null);
+        var now = DatabaseTimePrecision.micros(clock.instant());
         existing.replace(existing.getFullName(), age, existing.getLocation(), existing.getHeadline(),
                 existing.getSummary(), existing.getExperiencesJson(), existing.getSkillsJson(),
-                DatabaseTimePrecision.micros(clock.instant()));
+                now);
+        // Age is shared onboarding data. Keep the profile and resume consistent when the
+        // Agent applies a confirmed resume-age change, without creating a partial profile.
+        if (profile != null && (profile.getAge() == null || profile.getAge() != age)) {
+            profile.update(profile.getHeadline(), profile.getLocation(), age, profile.getGender(),
+                    profile.getPhone(), profile.getBirthplace(), now);
+        }
         repository.flush();
         return response(existing);
     }
