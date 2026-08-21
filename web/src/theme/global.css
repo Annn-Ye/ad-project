@@ -78,3 +78,11 @@ img.avatar{object-fit:cover}.profile-main{display:flex;flex-direction:column;gap
 .jobs-table .table-head,.jobs-table .table-row{grid-template-columns:1.7fr 1.4fr .65fr .78fr 1.2fr}
 .profile-form{width:100%;max-width:none}
 @media(max-width:1180px){.jobs-table .table-head,.jobs-table .table-row{grid-template-columns:1.6fr 1.2fr .65fr .65fr 1.2fr}}
+
+/* Keep two-column interview fields within the recruiter modal and give each admin action equal emphasis. */
+.modal{max-width:calc(100% - 24px);box-sizing:border-box}
+.modal .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.modal .form-grid>*{min-width:0}
+.modal input,.modal textarea,.modal select{box-sizing:border-box;min-width:0;max-width:100%;width:100%}
+.admin-detail-actions.stacked{grid-template-columns:1fr}
+.admin-detail-actions.stacked .danger{grid-column:auto}

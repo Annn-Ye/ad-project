@@ -101,6 +101,9 @@ class CommunityDetailViewModel(private val postId: String, private val repositor
         } }
     }
 
+    /** Consumes one-time navigation so returning from chat cannot open it again. */
+    fun consumeDirectConversationNavigation() = mutableState.update { it.copy(directConversationId = null) }
+
     private fun loadPost(clearError: Boolean = true) = viewModelScope.launch {
         mutableState.update { it.copy(loading = true, error = if (clearError) null else it.error) }
         when (val result = repository.post(postId)) {

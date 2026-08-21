@@ -425,6 +425,43 @@ paths:
       x-permission: Candidate conversation participant only
       description: 'Permission: Candidate conversation participant only. Status: IMPLEMENTED. Clients: Candidate.'
       x-mvp-scope: MVP
+  /candidate/conversations/job/{jobId}:
+    post:
+      tags:
+      - Conversations
+      summary: Start or return a Candidate inquiry conversation for a public active job
+      operationId: startCandidateInquiry
+      parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Candidate inquiry conversation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ConversationDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-status: IMPLEMENTED
+      x-clients:
+      - Candidate
+      x-permission: Candidate may contact only the recruiter for an active public job
+      description: 'Idempotently creates the Candidate/job/recruiter inquiry conversation. Status: IMPLEMENTED. Clients: Candidate.'
+      x-mvp-scope: MVP
   /candidate/conversations/{conversationId}:
     get:
       tags:
@@ -7230,7 +7267,7 @@ components:
           type: string
         conversationType:
           type: string
-          enum: [APPLICATION, RECRUITER_OUTREACH]
+          enum: [APPLICATION, RECRUITER_OUTREACH, CANDIDATE_INQUIRY]
         applicationId:
           oneOf:
           - type: string

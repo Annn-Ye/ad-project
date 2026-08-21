@@ -242,6 +242,19 @@ fun CommunityCategory.label()=name.replace('_',' ').lowercase().replaceFirstChar
                 }
             }
             Text(post.body, color = AdText, lineHeight = 21.sp)
+            if (post.images.isNotEmpty()) {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(post.images, key = CommunityImage::imageId) { image ->
+                        AsyncImage(
+                            model = image.url,
+                            contentDescription = "Post attachment",
+                            modifier = Modifier.size(width = 148.dp, height = 104.dp)
+                                .clip(RoundedCornerShape(10.dp)),
+                            contentScale = ContentScale.Crop,
+                        )
+                    }
+                }
+            }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(localTime(post.createdAt), color = AdMuted, fontSize = 11.sp)
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {

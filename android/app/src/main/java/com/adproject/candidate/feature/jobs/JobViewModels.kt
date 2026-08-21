@@ -10,6 +10,7 @@ import com.adproject.candidate.data.contract.EmploymentType
 import com.adproject.candidate.data.contract.MatchAnalysis
 import com.adproject.candidate.data.contract.RecommendedJob
 import com.adproject.candidate.data.contract.WorkplaceType
+import com.adproject.candidate.data.api.CandidateConversationRepository
 import com.adproject.candidate.data.model.Job
 import com.adproject.candidate.data.model.JobDetailData
 import com.adproject.candidate.data.model.JobFeedData
@@ -233,11 +234,15 @@ data class JobDetailUiState(
     val isSaved: Boolean = false,
     val saving: Boolean = false,
     val saveError: String? = null,
+    val startingConversation: Boolean = false,
+    val conversationError: String? = null,
+    val conversationId: String? = null,
 )
 
 class JobDetailViewModel(
     private val jobId: String,
     private val repository: CandidateJobRepository,
+    private val conversations: CandidateConversationRepository? = null,
 ) : ViewModel() {
     private val mutableState = MutableStateFlow(JobDetailUiState())
     val state: StateFlow<JobDetailUiState> = mutableState.asStateFlow()
@@ -264,6 +269,30 @@ class JobDetailViewModel(
         }
     }
 
+    /** Opens an idempotent pre-application conversation and leaves message delivery to ChatViewModel. */
+    fun messageRecruiter() {
+        val job = mutableState.value.data?.job ?: return
+        if (mutableState.value.startingConversation) return
+        val conversationRepository = conversations
+        if (conversationRepository == null) {
+            mutableState.update { it.copy(conversationError = "Messaging is unavailable right now.") }
+            return
+        }
+        mutableState.update { it.copy(startingConversation = true, conversationError = null) }
+        viewModelScope.launch {
+            when (val result = conversationRepository.startInquiry(job.jobId)) {
+                is ApiResult.Success -> mutableState.update {
+                    it.copy(startingConversation = false, conversationId = result.value.conversationId)
+                }
+                is ApiResult.Failure -> mutableState.update {
+                    it.copy(startingConversation = false, conversationError = result.message)
+                }
+            }
+        }
+    }
+
+    fun consumeConversationNavigation() = mutableState.update { it.copy(conversationId = null) }
+
     private fun load() {
         viewModelScope.launch {
             mutableState.value = JobDetailUiState(loading = true)
@@ -284,10 +313,11 @@ class JobDetailViewModel(
     }
 
     companion object {
-        fun factory(jobId: String, repository: CandidateJobRepository): ViewModelProvider.Factory =
+        fun factory(jobId: String, repository: CandidateJobRepository,
+                    conversations: CandidateConversationRepository? = null): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T = JobDetailViewModel(jobId, repository) as T
+                override fun <T : ViewModel> create(modelClass: Class<T>): T = JobDetailViewModel(jobId, repository, conversations) as T
             }
     }
 }
