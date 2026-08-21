@@ -81,135 +81,145 @@ Candidate receives the update and continues the conversation
 
 ## Feature walkthroughs
 
-These screenshots are captured from working feature flows in [`material/Screenshots of working features`](<material/Screenshots of working features>).
+Every functional screenshot in [`material/Screenshots of working features`](<material/Screenshots of working features>) is included below. The numbered galleries are collapsed by default and use compact previews; select a feature to expand its evidence.
 
 ### Candidate Android app
 
-#### Career profile and resume
+<details>
+<summary><strong>1. Career profile and resume</strong> — maintain the profile, photo and default resume used for applications and recommendations.</summary>
 
-Candidates can keep their essential career information, profile photo and default resume in one place. The profile and resume are the foundation for applying to jobs and for receiving personalised recommendations.
+<p><img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/edit%20profile%201.png" alt="Candidate profile editor" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/edit%20profile%202.png" alt="Candidate profile fields" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/resume%201.png" alt="Candidate resume editor" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/resume%202.png" alt="Candidate resume details" width="200" /></p>
+</details>
 
-![Candidate resume editor](material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/resume%201.png)
+<details>
+<summary><strong>2. Job preferences and exclusions</strong> — set preferences that shape recommended roles and filters.</summary>
 
-#### Search and filter jobs
+<p><img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Preferences%20and%20Exclusions/filter%20jobs.png" alt="Candidate job preferences" width="200" /></p>
+</details>
 
-Candidates can search available roles and narrow results by employment type, workplace, location and minimum salary, making it easier to focus on relevant opportunities.
+<details>
+<summary><strong>3. Search, filter and view jobs</strong> — search roles, apply structured filters and inspect the full job description.</summary>
 
-![Job filters](material/Screenshots%20of%20working%20features/Search%20Jobs/job%20filter.png)
+<p><img src="material/Screenshots%20of%20working%20features/Search%20Jobs/search%20job.png" alt="Job search" width="200" /> <img src="material/Screenshots%20of%20working%20features/Search%20Jobs/job%20filter.png" alt="Job filters" width="200" /> <img src="material/Screenshots%20of%20working%20features/Search%20Jobs/job%20detail.png" alt="Job detail" width="200" /></p>
+</details>
 
-#### Intelligent job recommendations
+<details>
+<summary><strong>4. Intelligent job recommendations</strong> — show match scores, matching skills and explainable skill gaps.</summary>
 
-The recommendation flow surfaces roles based on the candidate's information. Each job can show a match score, matching skills and clear skill gaps so that the result is explainable rather than a black box.
+<p><img src="material/Screenshots%20of%20working%20features/Receive%20Intelligent%20Job%20Recommendations/AI%20recommendation%201.png" alt="AI recommendation" width="200" /> <img src="material/Screenshots%20of%20working%20features/Receive%20Intelligent%20Job%20Recommendations/AI%20recommendation%202.png" alt="AI recommendation analysis" width="200" /></p>
+</details>
 
-![AI match analysis](material/Screenshots%20of%20working%20features/Receive%20Intelligent%20Job%20Recommendations/AI%20recommendation%201.png)
+<details>
+<summary><strong>5. Save jobs</strong> — bookmark roles and revisit the saved-job list or a saved role's detail.</summary>
 
-#### Save jobs and apply
+<p><img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20%EF%BC%88click%20star%EF%BC%89.png" alt="Save a job" width="200" /> <img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20details.png" alt="Saved job detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20entrance.png" alt="Saved jobs entry" width="200" /></p>
+</details>
 
-Candidates can bookmark jobs for later and submit an application from the job detail page. The system protects against duplicate applications and records the resume snapshot used for the application.
+<details>
+<summary><strong>6. Apply for jobs</strong> — review the role, confirm the default-resume submission and receive a recorded result.</summary>
 
-| Save a role                                                                                               | Review details and apply                                                                                                |
-| --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| ![Saved jobs entry](material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20entrance.png) | ![Job detail and application entry](material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/job%20detail.png) |
+<p><img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/job%20detail.png" alt="Apply from job detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/confirm%20application.png" alt="Confirm application" width="200" /> <img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/application%20submitted.png" alt="Application submitted" width="200" /></p>
+</details>
 
-#### Track applications and interviews
+<details>
+<summary><strong>7. Track and withdraw applications</strong> — view application states, interview activity and, where permitted, withdraw a submission.</summary>
 
-The **My applications** area groups application progress, interview activity and archived outcomes. From an application detail page, candidates can inspect the timeline and withdraw an application when appropriate.
+<p><img src="material/Screenshots%20of%20working%20features/View%20Career%20Dashboard/career%20dashboard.png" alt="Career dashboard" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%201.png" alt="Application tracking" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%202.png" alt="Application progress" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%203.png" alt="Application interview detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/withdraw%20applications.png" alt="Withdraw application" width="200" /></p>
+</details>
 
-| Application overview                                                                                                                          | Application detail and withdrawal                                                                                                                      |
-| --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| ![Career dashboard and application overview](material/Screenshots%20of%20working%20features/View%20Career%20Dashboard/career%20dashboard.png) | ![Application detail and withdrawal](material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/withdraw%20applications.png) |
+<details>
+<summary><strong>8. Communicate with recruiters</strong> — open a conversation and exchange interview notifications, files and images.</summary>
 
-#### Communicate with recruiters
+<p><img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Recruiters/message%20entrance.png" alt="Candidate message entry" width="200" /> <img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Recruiters/message%20detail.png" alt="Candidate recruiter conversation" width="200" /></p>
+</details>
 
-Messaging provides a direct candidate-recruiter conversation after an application or proactive outreach. It supports interview notifications as well as file and image attachments in the conversation thread.
+<details>
+<summary><strong>9. Participate in the career community</strong> — browse, publish, like and comment on categorised career discussions.</summary>
 
-![Conversation with interview notification and attachment](material/Screenshots%20of%20working%20features/Communicate%20with%20Recruiters/message%20detail.png)
+<p><img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/community%20page.png" alt="Community feed" width="200" /> <img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/create%20post.png" alt="Create community post" width="200" /> <img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/like%26commit%20post.png" alt="Like and comment on post" width="200" /></p>
+</details>
 
-#### Participate in the career community
+<details>
+<summary><strong>10. Candidate AI Agent</strong> — turn a natural-language request into a previewed, confirmed resume-management change.</summary>
 
-The community provides searchable, categorised discussions for job seeking, recruiting, technical discussion and help. Candidates can publish posts with images, like and comment on posts, and message an author.
+<p><img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%201.png" alt="Candidate Agent request" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%202.png" alt="Candidate Agent preview" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%203.png" alt="Candidate Agent confirmation" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%20summary.png" alt="Candidate Agent result" width="200" /></p>
+</details>
 
-| Community feed                                                                                                               | Create a post                                                                                                                    |
-| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| ![Community feed](material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/community%20page.png) | ![Create community post](material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/create%20post.png) |
+<details>
+<summary><strong>11. Authentication, password reset and onboarding</strong> — register, sign in and reset a password through an emailed verification code before completing essential candidate information.</summary>
 
-#### AI Agent for resume management
-
-The AI Agent turns a natural-language request into a constrained plan, then shows the candidate a preview before a change is executed. This keeps resume operations auditable and prevents the Agent from acting without confirmation.
-
-![AI Agent resume result](material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%20summary.png)
-
-#### Authentication, password reset and onboarding
-
-Candidates and recruiters can register, sign in and reset a password using a verification code. New candidates then complete essential profile and resume information before using recommendation-dependent features.
-
-| Recruiter sign-in | Successful sign-in |
-| --- | --- |
-| ![HireX Recruiter sign-in](material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/authentication%26log%20in.png) | ![HireX Recruiter dashboard after sign-in](material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/log%20in%20successfully.png) |
-
-| Request a reset code | Verify the code and set a new password |
-| --- | --- |
-| ![HireX request password reset](material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/password%20reset%201.png) | ![HireX verify password reset code](material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/password%20reset%202.png) |
-
-![HireX password reset verification email](material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/email.jpg)
+<p><img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/authentication%26log%20in.png" alt="Recruiter sign in" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/log%20in%20successfully.png" alt="Successful sign in" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/password%20reset%201.png" alt="Request password reset" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/password%20reset%202.png" alt="Verify password reset code" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/email.jpg" alt="Password reset verification email" width="200" /></p>
+</details>
 
 ### Recruiter web workspace
 
-Recruiters manage their company profile, create and publish jobs, review candidate applications, use Candidate Fit and AI-assisted ranking, communicate with candidates and schedule online, on-site or phone interviews. Google Calendar/Meet is an optional integration that becomes available after the recruiter connects a Google account.
+<details>
+<summary><strong>12. Recruitment dashboard</strong> — summarise active roles, applications, reviews, interviews and company verification.</summary>
 
-#### Track recruitment activity and manage job postings
+<p><img src="material/Screenshots%20of%20working%20features/View%20Recruitment%20Dashboard/recruitment%20dashboard.png" alt="Recruiter dashboard" width="300" /></p>
+</details>
 
-The Recruiter Dashboard summarises active roles, incoming applications, reviews, interviews and company-verification status. Recruiters can then create a job, manage its publication state and inspect its applicant count from the job-management workspace.
+<details>
+<summary><strong>13. Manage job postings</strong> — create roles, inspect their detail and control their publication state and applicants.</summary>
 
-| Recruitment dashboard | Job management |
-| --- | --- |
-| ![Recruiter dashboard](material/Screenshots%20of%20working%20features/View%20Recruitment%20Dashboard/recruitment%20dashboard.png) | ![Recruiter job management](material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/job%20page.png) |
+<p><img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/create%20job.png" alt="Create job" width="240" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/job%20page.png" alt="Job management" width="240" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/job%20details.png" alt="Job posting detail" width="240" /></p>
+</details>
 
-![Recruiter creates a job posting](material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/create%20job.png)
+<details>
+<summary><strong>14. Manage company profile</strong> — maintain the company information candidates see with job listings.</summary>
 
-#### Manage company information and candidate outreach
+<p><img src="material/Screenshots%20of%20working%20features/Manage%20Company%20Profile/company%20profile.png" alt="Recruiter company profile" width="300" /></p>
+</details>
 
-Recruiters maintain the public company profile that candidates see on job details, and can open a direct conversation with a prospective candidate to support proactive outreach as well as application-related communication.
+<details>
+<summary><strong>15. Communicate with candidates</strong> — begin and manage proactive candidate conversations.</summary>
 
-| Company profile | Recruiter-to-candidate conversation |
-| --- | --- |
-| ![Recruiter company profile](material/Screenshots%20of%20working%20features/Manage%20Company%20Profile/company%20profile.png) | ![Recruiter candidate conversation](material/Screenshots%20of%20working%20features/Communicate%20with%20Candidates/communicate%20details.png) |
+<p><img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Candidates/communicate%20entrance.png" alt="Recruiter message entry" width="240" /> <img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Candidates/communicate%20details.png" alt="Recruiter candidate conversation" width="240" /></p>
+</details>
 
-#### Discover and screen candidates with AI assistance
+<details>
+<summary><strong>16. Discover and rank candidates</strong> — review recommended candidates for a role and start outreach.</summary>
 
-Recruiters can browse recommended candidates for a role, review the ranking signal and message a promising candidate. The HR Agent can also screen candidates for a selected job and presents ranked results before any follow-up action is taken.
+<p><img src="material/Screenshots%20of%20working%20features/Discover%20and%20Rank%20Candidates/discover%20%26%20rank%20candidates.png" alt="Candidate discovery and ranking" width="300" /></p>
+</details>
 
-| Candidate discovery and ranking | HR Agent screening result |
-| --- | --- |
-| ![Recruiter candidate ranking](material/Screenshots%20of%20working%20features/Discover%20and%20Rank%20Candidates/discover%20%26%20rank%20candidates.png) | ![Recruiter Agent candidate screening](material/Screenshots%20of%20working%20features/Recruiter%20AI%20Screening%20and%20Interview%20Agent/use%20agent%20to%20find%20candidate.png) |
+<details>
+<summary><strong>17. Recruiter AI screening and interview Agent</strong> — start an HR Agent conversation and receive ranked candidate screening results before action.</summary>
 
-#### Manage the candidate pipeline
+<p><img src="material/Screenshots%20of%20working%20features/Recruiter%20AI%20Screening%20and%20Interview%20Agent/AI%20agent%20start%20page.png" alt="Recruiter Agent start page" width="240" /> <img src="material/Screenshots%20of%20working%20features/Recruiter%20AI%20Screening%20and%20Interview%20Agent/use%20agent%20to%20find%20candidate.png" alt="Recruiter Agent screening" width="240" /></p>
+</details>
 
-The application detail page gives recruiters one place to review the submitted resume, progress candidates through **Submitted → Review → Interview → Outcome**, inspect the AI Candidate Fit result and contact the candidate directly.
+<details>
+<summary><strong>18. Review applications and manage the candidate pipeline</strong> — review resumes and Candidate Fit, then progress candidates through Submitted, Review, Interview and Outcome.</summary>
 
-| Application review and progression | Schedule an interview |
-| --- | --- |
-| ![Recruiter application review](material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Review%20application.png) | ![Recruiter interview scheduling](material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%202.png) |
+<p><img src="material/Screenshots%20of%20working%20features/Review%20Applications/application%20page.png" alt="Recruiter applications list" width="200" /> <img src="material/Screenshots%20of%20working%20features/Review%20Applications/application%20details.png" alt="Recruiter application detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/View%20application%20pipeline.png" alt="Application pipeline" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Review%20application.png" alt="Review application" width="200" /></p>
+</details>
 
-#### Interview and offer workflow
+<details>
+<summary><strong>19. Schedule interviews and record outcomes</strong> — schedule online Google Meet, on-site or phone interviews, access the meeting link and record an offer or rejection.</summary>
 
-Recruiters can schedule an online Google Meet interview with a calendar invitation, open the generated meeting link, and record an application outcome such as an offer or rejection.
-
-| Access the generated interview link | Record an offer outcome |
-| --- | --- |
-| ![Generated Google Meet interview link](material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Visit%20interview%20meet%20link%20.png) | ![Recruiter makes an offer](material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Make%20offer.png) |
+<p><img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%201.png" alt="Schedule interview" width="180" /> <img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%202.png" alt="Google Meet interview schedule" width="180" /> <img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%203.png" alt="Scheduled interview" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Schedule%20interview.png" alt="Schedule interview from pipeline" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Visit%20interview%20meet%20link%20.png" alt="Google Meet link" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Make%20offer.png" alt="Make offer" width="180" /></p>
+</details>
 
 ### Administrator web workspace
 
-Administrators review company submissions, manage accounts, maintain company information and inspect audit records. Administrator registration is intentionally restricted; access is granted through the controlled bootstrap and authorisation flow.
+<details>
+<summary><strong>20. Restricted administrator access and account management</strong> — use controlled administrator sign-in, manage accounts and grant platform access.</summary>
 
-| Restricted administrator sign-in | Account and access management |
-| --- | --- |
-| ![HireX Administrator sign-in](material/Screenshots%20of%20working%20features/Admin/1.png) | ![HireX Administrator accounts](material/Screenshots%20of%20working%20features/Admin/2.png) |
+<p><img src="material/Screenshots%20of%20working%20features/Admin/1.png" alt="Administrator sign in" width="220" /> <img src="material/Screenshots%20of%20working%20features/Admin/2.png" alt="Administrator accounts" width="220" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Users/manage%20users.png" alt="Administrator manages users" width="220" /></p>
+</details>
 
-| Company verification and information maintenance | Traceable audit log |
-| --- | --- |
-| ![HireX Administrator company reviews](material/Screenshots%20of%20working%20features/Admin/3.png) | ![HireX Administrator audit log](material/Screenshots%20of%20working%20features/Admin/4.png) |
+<details>
+<summary><strong>21. Review companies and maintain company information</strong> — inspect company submissions and record an approval or rejection decision.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Admin/3.png" alt="Administrator company reviews" width="260" /> <img src="material/Screenshots%20of%20working%20features/Review%20Companies/review%20companies.png" alt="Review company" width="260" /></p>
+</details>
+
+<details>
+<summary><strong>22. Review the administrator audit log</strong> — trace administrative actions, affected records, reasons and request identifiers.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Admin/4.png" alt="Administrator audit log" width="260" /> <img src="material/Screenshots%20of%20working%20features/View%20Administrator%20Audit%20Log/audit%20log.png" alt="Audit log entries" width="260" /></p>
+</details>
 
 ## Architecture and technology
 
