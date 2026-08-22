@@ -1,30 +1,283 @@
-# AD Project
+# HireX
 
-An intelligent recruitment platform capstone project for candidates, recruiters, and administrators.
+> An intelligent recruitment platform that helps candidates discover suitable roles and helps recruiters manage the hiring journey from job creation to interview.
 
-## Technology baseline
+## Team responsibilities
 
-- Candidate client: Kotlin + Jetpack Compose (Android)
-- Recruiter and administrator clients: React + TypeScript
-- Core backend: Java + Spring Boot
-- Database: MySQL
-- Machine learning: a team-trained job recommendation model, with training and inference handled by a standalone Python service
-- AI Agent: performs operations that the current user is authorized to execute through controlled Spring Boot tools
-- Agent orchestration: an internal Python + LangGraph service generates plans only; Spring Boot handles authorization, tools, previews, and auditing
+| Module                                  | Delivery scope                                                                                                                                 | Owners                                       |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Android frontend                        | Jetpack Compose candidate UI: onboarding, profile/resume, jobs, applications, messaging, community and Candidate Agent                         | Huang Yichen, Ye Zhian                       |
+| Web frontend                            | React recruiter and administrator UI: profiles, jobs, applications, messaging, community, Agent and administration                             | Huang Yichen, Ye Zhian                       |
+| Candidate onboarding and profile        | Android registration, sign-in, onboarding questionnaire, profile, avatar, resume and job preferences                                           | Huang Yichen, Ye Zhian                       |
+| Candidate job journey                   | Android jobs, search and filters, saved jobs, job details, applications and application tracking                                               | Huang Yichen, Ye Zhian                       |
+| Recruiter company and jobs              | Recruiter profile, company-review guidance, dashboard, job drafts, job publishing, editing and closing                                         | Huang Yichen, Ye Zhian                       |
+| Recruiter hiring workflow               | Applications, candidate details and resumes, status changes, Candidate Fit, interview scheduling and management                                | Huang Yichen, Wang Qiuye                     |
+| Messaging and notifications             | Cross-platform conversations, unread indicators, attachments/images, interview notifications and direct entry from a candidate profile or post | Huang Yichen, Wang Qiuye                     |
+| Community                               | Candidate and recruiter post feeds, search, categories, posts with images, likes, comments and author messaging                                | Chen Hongbing                                |
+| Administration and company governance   | Administrator access, company reviews, accounts, company data maintenance, audit logs and pagination                                           | Wang Qiuye                                   |
+| ML recommendation service               | Job recommendations, candidate ranking, scores, explanations, cold-start handling and fallback integration                                     | Yan Bohao                                    |
+| ML training and evaluation              | Data cleaning, Top-300 retrieval, teacher labels, HGB, embeddings, collaborative filtering and hybrid-model evaluation                         | Chen Jiale                                   |
+| AI Agent                                | Candidate and recruiter planning, previews, explicit confirmation and execution records                                                        | Liu Ruinan                                   |
+| Deployment and quality                  | Docker, cloud configuration, CI, demo data, OpenAPI, regression tests and project documentation                                                | Bian Haifan                                  |
+| Project analysis and delivery artefacts | Class diagrams, sequence diagrams, project status reports and sprint backlog                                                                   | Chen Hongbing,Yan Bohao,Chen Jiale           |
+| Product design artefacts                | Class diagrams, sequence diagrams and Figma design                                                                                             | Chen Jiale,Chen Hongbing,Yan Bohao，Ye Zhian |
 
-## Current goal
+## Project overview
 
-First, complete one fully functional end-to-end MVP flow:
+HireX is a three-role recruitment platform:
+
+- **Candidates** use the Android app to build a career profile, receive job recommendations, search and save roles, apply, track outcomes, communicate with recruiters and participate in the community.
+- **Recruiters** use the web workspace to manage company information and jobs, review applications, contact candidates, schedule interviews and use AI-assisted candidate ranking.
+- **Administrators** use the web workspace to govern accounts and companies, review company submissions, maintain company information and inspect audit activity.
+
+The primary end-to-end flow is:
 
 ```text
-Recruiter publishes a job
-→ The job appears in the Android app
-→ Candidate views the job details and applies
-→ Recruiter reviews the application and updates its status
-→ Candidate views the application progress
+Recruiter creates and publishes a job
+        ↓
+Candidate discovers the job through search or recommendation
+        ↓
+Candidate views details and applies with a resume
+        ↓
+Recruiter reviews the application, candidate fit and ranking
+        ↓
+Recruiter updates the outcome or schedules an interview
+        ↓
+Candidate receives the update and continues the conversation
 ```
 
-ML and the AI Agent are key features of the capstone project, but core functionality such as signing in, browsing, and applying must not depend on them.
+## Key features
+
+### Candidate Android app
+
+- Secure registration, sign-in, password reset and first-time onboarding.
+- Editable career profile, avatar, resume and job preferences.
+- Intelligent job recommendations with match scores and skill-gap explanations.
+- Job search, employment-type and preference filters, saved jobs and detailed role/company/recruiter views.
+- Application submission, duplicate-application protection, tracking, withdrawal and interview updates.
+- Recruiter messaging with unread status, files and image attachments.
+- Community posts, categories, search, images, likes, comments and direct author messaging.
+- An AI Agent that plans authorised profile/resume actions, shows a preview and executes only after explicit confirmation.
+
+### Recruiter web workspace
+
+- Recruiter profile and company-review status guidance.
+- Dashboard, job draft creation, publishing, editing and closing.
+- Application pipeline, candidate profile/resume review and status transitions.
+- Candidate Fit and AI-assisted ranking for applicants and recommended talent.
+- Proactive candidate outreach, message threads and attachment support.
+- Online, on-site and phone interview scheduling; Google Calendar/Meet is available when a recruiter has completed the optional Google integration.
+
+### Administrator web workspace
+
+- Restricted administrator access without public admin registration.
+- Company reviews, account status management and company information maintenance.
+- Audit logs and clear paginated views for operational review.
+
+### ML and AI Agent
+
+- A Python ML service trains and serves job recommendation and candidate-ranking models; the Spring Boot API provides graceful fallback when the service is unavailable.
+- The AI Agent uses a plan-preview-confirm-execute workflow. The planner does not directly access the database or gain privileges beyond the signed-in user.
+
+## Feature walkthroughs
+
+Every functional screenshot in [`material/Screenshots of working features`](<material/Screenshots of working features>) is included below. The numbered galleries are collapsed by default and use compact previews; select a feature to expand its evidence.
+
+### Candidate Android app
+
+<details>
+<summary><strong>1. Career profile and resume</strong> — maintain the profile, photo and default resume used for applications and recommendations.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/edit%20profile%201.png" alt="Candidate profile editor" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/edit%20profile%202.png" alt="Candidate profile fields" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/resume%201.png" alt="Candidate resume editor" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/resume%202.png" alt="Candidate resume details" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>2. Job preferences and exclusions</strong> — set preferences that shape recommended roles and filters.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Preferences%20and%20Exclusions/filter%20jobs.png" alt="Candidate job preferences" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>3. Search, filter and view jobs</strong> — search roles, apply structured filters and inspect the full job description.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Search%20Jobs/search%20job.png" alt="Job search" width="200" /> <img src="material/Screenshots%20of%20working%20features/Search%20Jobs/job%20filter.png" alt="Job filters" width="200" /> <img src="material/Screenshots%20of%20working%20features/Search%20Jobs/job%20detail.png" alt="Job detail" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>4. Intelligent job recommendations</strong> — show match scores, matching skills and explainable skill gaps.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Receive%20Intelligent%20Job%20Recommendations/AI%20recommendation%201.png" alt="AI recommendation" width="200" /> <img src="material/Screenshots%20of%20working%20features/Receive%20Intelligent%20Job%20Recommendations/AI%20recommendation%202.png" alt="AI recommendation analysis" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>5. Save jobs</strong> — bookmark roles and revisit the saved-job list or a saved role's detail.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20%EF%BC%88click%20star%EF%BC%89.png" alt="Save a job" width="200" /> <img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20details.png" alt="Saved job detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20entrance.png" alt="Saved jobs entry" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>6. Apply for jobs</strong> — review the role, confirm the default-resume submission and receive a recorded result.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/job%20detail.png" alt="Apply from job detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/confirm%20application.png" alt="Confirm application" width="200" /> <img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/application%20submitted.png" alt="Application submitted" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>7. Track and withdraw applications</strong> — view application states, interview activity and, where permitted, withdraw a submission.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/View%20Career%20Dashboard/career%20dashboard.png" alt="Career dashboard" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%201.png" alt="Application tracking" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%202.png" alt="Application progress" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%203.png" alt="Application interview detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/withdraw%20applications.png" alt="Withdraw application" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>8. Communicate with recruiters</strong> — open a conversation and exchange interview notifications, files and images.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Recruiters/message%20entrance.png" alt="Candidate message entry" width="200" /> <img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Recruiters/message%20detail.png" alt="Candidate recruiter conversation" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>9. Participate in the career community</strong> — browse, publish, like and comment on categorised career discussions.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/community%20page.png" alt="Community feed" width="200" /> <img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/create%20post.png" alt="Create community post" width="200" /> <img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/like%26commit%20post.png" alt="Like and comment on post" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>10. Candidate AI Agent</strong> — turn a natural-language request into a previewed, confirmed resume-management change.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%201.png" alt="Candidate Agent request" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%202.png" alt="Candidate Agent preview" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%203.png" alt="Candidate Agent confirmation" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%20summary.png" alt="Candidate Agent result" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>11. Authentication, password reset and onboarding</strong> — register, sign in and reset a password through an emailed verification code before completing essential candidate information.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/authentication%26log%20in.png" alt="Recruiter sign in" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/log%20in%20successfully.png" alt="Successful sign in" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/password%20reset%201.png" alt="Request password reset" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/password%20reset%202.png" alt="Verify password reset code" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/email.jpg" alt="Password reset verification email" width="200" /></p>
+</details>
+
+### Recruiter web workspace
+
+<details>
+<summary><strong>12. Recruitment dashboard</strong> — summarise active roles, applications, reviews, interviews and company verification.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/View%20Recruitment%20Dashboard/recruitment%20dashboard.png" alt="Recruiter dashboard" width="300" /></p>
+</details>
+
+<details>
+<summary><strong>13. Manage job postings</strong> — create roles, inspect their detail and control their publication state and applicants.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/create%20job.png" alt="Create job" width="240" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/job%20page.png" alt="Job management" width="240" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/job%20details.png" alt="Job posting detail" width="240" /></p>
+</details>
+
+<details>
+<summary><strong>14. Manage company profile</strong> — maintain the company information candidates see with job listings.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Manage%20Company%20Profile/company%20profile.png" alt="Recruiter company profile" width="300" /></p>
+</details>
+
+<details>
+<summary><strong>15. Communicate with candidates</strong> — begin and manage proactive candidate conversations.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Candidates/communicate%20entrance.png" alt="Recruiter message entry" width="240" /> <img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Candidates/communicate%20details.png" alt="Recruiter candidate conversation" width="240" /></p>
+</details>
+
+<details>
+<summary><strong>16. Discover and rank candidates</strong> — review recommended candidates for a role and start outreach.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Discover%20and%20Rank%20Candidates/discover%20%26%20rank%20candidates.png" alt="Candidate discovery and ranking" width="300" /></p>
+</details>
+
+<details>
+<summary><strong>17. Recruiter AI screening and interview Agent</strong> — start an HR Agent conversation and receive ranked candidate screening results before action.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Recruiter%20AI%20Screening%20and%20Interview%20Agent/AI%20agent%20start%20page.png" alt="Recruiter Agent start page" width="240" /> <img src="material/Screenshots%20of%20working%20features/Recruiter%20AI%20Screening%20and%20Interview%20Agent/use%20agent%20to%20find%20candidate.png" alt="Recruiter Agent screening" width="240" /></p>
+</details>
+
+<details>
+<summary><strong>18. Review applications and manage the candidate pipeline</strong> — review resumes and Candidate Fit, then progress candidates through Submitted, Review, Interview and Outcome.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Review%20Applications/application%20page.png" alt="Recruiter applications list" width="200" /> <img src="material/Screenshots%20of%20working%20features/Review%20Applications/application%20details.png" alt="Recruiter application detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/View%20application%20pipeline.png" alt="Application pipeline" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Review%20application.png" alt="Review application" width="200" /></p>
+</details>
+
+<details>
+<summary><strong>19. Schedule interviews and record outcomes</strong> — schedule online Google Meet, on-site or phone interviews, access the meeting link and record an offer or rejection.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%201.png" alt="Schedule interview" width="180" /> <img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%202.png" alt="Google Meet interview schedule" width="180" /> <img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%203.png" alt="Scheduled interview" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Schedule%20interview.png" alt="Schedule interview from pipeline" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Visit%20interview%20meet%20link%20.png" alt="Google Meet link" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Make%20offer.png" alt="Make offer" width="180" /></p>
+</details>
+
+### Administrator web workspace
+
+<details>
+<summary><strong>20. Restricted administrator access and account management</strong> — use controlled administrator sign-in, manage accounts and grant platform access.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Admin/1.png" alt="Administrator sign in" width="220" /> <img src="material/Screenshots%20of%20working%20features/Admin/2.png" alt="Administrator accounts" width="220" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Users/manage%20users.png" alt="Administrator manages users" width="220" /></p>
+</details>
+
+<details>
+<summary><strong>21. Review companies and maintain company information</strong> — inspect company submissions and record an approval or rejection decision.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Admin/3.png" alt="Administrator company reviews" width="260" /> <img src="material/Screenshots%20of%20working%20features/Review%20Companies/review%20companies.png" alt="Review company" width="260" /></p>
+</details>
+
+<details>
+<summary><strong>22. Review the administrator audit log</strong> — trace administrative actions, affected records, reasons and request identifiers.</summary>
+
+<p><img src="material/Screenshots%20of%20working%20features/Admin/4.png" alt="Administrator audit log" width="260" /> <img src="material/Screenshots%20of%20working%20features/View%20Administrator%20Audit%20Log/audit%20log.png" alt="Audit log entries" width="260" /></p>
+</details>
+
+## Architecture and technology
+
+```text
+Android Candidate App ─┐
+                       ├── Spring Boot API ── MySQL + Flyway
+React Recruiter/Admin ─┘          │
+                                  ├── Python ML service
+                                  └── Python Agent planner
+```
+
+| Layer                   | Technology                                                                      |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| Candidate client        | Kotlin, Jetpack Compose and Retrofit                                            |
+| Recruiter/Admin clients | React, TypeScript, Vite and TanStack Query                                      |
+| Core API                | Java 21 and Spring Boot                                                         |
+| Database                | MySQL 8 with Flyway migrations                                                  |
+| ML                      | Python training and inference service                                           |
+| Agent                   | Python/LangGraph planning service; Spring Boot owns authorisation and execution |
+| Deployment              | Docker Compose, Nginx and Ansible                                               |
+
+Spring Boot is the only public business API. The Android and web clients do not access the database, ML service or Agent planner directly.
+
+## Local development
+
+Prerequisites: Java 21, Maven, Node.js, Android Studio/JDK 21, Docker and MySQL 8 (or the provided Docker services).
+
+1. Copy [`.env.example`](.env.example) to an untracked `.env` file and replace placeholders with local values. Never commit passwords, API keys, OAuth secrets or production connection strings.
+
+2. Start MySQL, then run the backend:
+
+   ```bash
+   cd backend
+   mvn spring-boot:run
+   ```
+
+3. Start the web workspace:
+
+   ```bash
+   cd web
+   npm install
+   npm run dev
+   ```
+
+4. Build the Android candidate app:
+
+   ```bash
+   cd android
+   ./gradlew assembleDebug
+   ```
+
+Useful checks:
+
+```bash
+cd backend && mvn test
+cd web && npm run typecheck && npm test
+cd android && ./gradlew testDebugUnitTest lintDebug assembleDebug
+```
 
 ## Documentation
 
@@ -33,93 +286,11 @@ ML and the AI Agent are key features of the capstone project, but core functiona
 - [System architecture](docs/architecture.md)
 - [Database design](docs/database-design.md)
 - [API design](docs/api-design.md)
+- [OpenAPI contract](docs/openapi-v1.yaml)
 - [Authorization rules](docs/permissions.md)
 - [Testing plan](docs/testing-plan.md)
-- [Development plan](docs/development-plan.md)
-- [Figma MVP design review](docs/figma-mvp-audit.md)
-- [Graduation thesis outline](docs/graduation-thesis-outline.md)
+- [Agent design](docs/agent-design.md)
 
-Design reference: [AD project Copy](https://www.figma.com/design/ellcZx2GjomKwCQNxuryri/AD_project--Copy-?node-id=0-1)
+## Contributing
 
-## Run and test the backend
-
-The backend requires Java 21, Maven, and MySQL 8. Copy the variables from `.env.example` into your local environment configuration (do not commit real values), then run:
-
-```bash
-cd backend
-mvn spring-boot:run
-```
-
-By default, the service listens on `http://localhost:8080`, and the API prefix is `/api/v1`. Flyway automatically applies database migrations at startup; Hibernate only validates the schema and does not create tables.
-
-### Password reset emails with Resend
-
-Password reset emails are sent through Resend SMTP. First verify a sending domain in Resend and create an API key, then set the following values in your local, untracked `.env` file:
-
-```dotenv
-SMTP_HOST=smtp.resend.com
-SMTP_PORT=587
-SMTP_USERNAME=resend
-SMTP_PASSWORD=re_your_api_key
-SMTP_FROM_ADDRESS=no-reply@your-verified-domain.example
-SMTP_STARTTLS=true
-```
-
-The root `.env` file is ignored by Git. Never write a real API key to `.env.example` or any tracked file.
-
-Production CD uses the GitHub `production` Environment configuration:
-
-- Secret `RESEND_API_KEY`: the Resend API key.
-- Variable `RESEND_FROM_ADDRESS`: a sender address under a verified domain, such as `no-reply@example.com`.
-- Secret `DEEPSEEK_API_KEY`: the DeepSeek API key used by the Agent Planner.
-
-After a push to `main`, CD passes these three values to the server containers as runtime environment variables without writing secrets to the Git repository. If the values are not configured in GitHub, the deployment continues to use `SMTP_PASSWORD`, `SMTP_FROM_ADDRESS`, and `DEEPSEEK_API_KEY` from `/opt/adproject/infra/docker/.env` on the server; all other parameters have safe defaults. If `DEEPSEEK_API_KEY` is missing from both locations, the Agent Planner returns 503 and Spring Boot saves the run as `FAILED` without affecting core functionality.
-
-Run all tests and build the package:
-
-```bash
-cd backend
-mvn test
-mvn package
-```
-
-The test suite always runs Auth HTTP integration tests against an isolated H2 database in MySQL compatibility mode. When Docker is available, it also validates clean-database migrations with Testcontainers and MySQL 8.4.
-
-## Run the administrator system locally
-
-Administrator is not a third business role. First register a normal Candidate or Recruiter account, then set
-`ADMIN_BOOTSTRAP_EMAIL` to that account's email address after the initial startup. The system grants
-`PLATFORM_ADMIN` only when no active administrator exists. It does not create an account or store a default
-password; the environment variable can be removed after the authorization has been persisted.
-
-```powershell
-$env:ADMIN_BOOTSTRAP_EMAIL="your-registered-email@example.com"
-cd backend
-mvn spring-boot:run
-```
-
-Start the frontend in another terminal:
-
-```powershell
-cd web
-npm install
-npm run dev
-```
-
-Open `http://localhost:5173/admin/sign-in` in a browser. The administrator workspace includes users and permissions, company reviews, basic community moderation, and audit logs. `/admin/me` revalidates authorization with the server whenever the workspace is opened. See [OpenAPI](docs/openapi-v1.yaml) for the complete API contract.
-
-## Run and test the Agent Planner
-
-Before starting the Agent API, start the internal Planner in another terminal:
-
-```bash
-cd agent-service
-python -m venv .venv
-. .venv/bin/activate
-pip install -e '.[test]'
-uvicorn agent_service.main:app --host 127.0.0.1 --port 8090
-```
-
-Run the Planner tests with `pytest -q`. The current MVP supports querying or updating the default resume's age, summary, skills, and experience. The Planner uses `deepseek-v4-flash` to generate a constrained, structured plan and requires `DEEPSEEK_API_KEY` in the process environment. If the key is not configured or the provider call fails, the endpoint returns 503; Spring Boot saves the run as `FAILED` and returns a safe error. Spring Boot reads the current user's resume and generates a field-level preview, which Android displays as a plan. Spring Boot executes `apply_resume_patch` only after the user explicitly confirms through the confirmation endpoint. Confirmation validates a one-time confirmation ID, run version, resume version, expiration time, and `Idempotency-Key`; retries with the same idempotency key do not create duplicate writes.
-
-In the Android app, open **Profile → AI Agent** to access the feature directly. See [`docs/agent-design.md`](docs/agent-design.md) and [`docs/openapi-v1.yaml`](docs/openapi-v1.yaml) for the public Agent API, request examples, and security boundaries.
+Please read [AGENTS.md](AGENTS.md) before making changes. Keep API contracts and Flyway migrations aligned, preserve existing work from other contributors, and do not commit secrets or generated local environment files.
