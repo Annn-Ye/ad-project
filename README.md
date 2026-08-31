@@ -82,145 +82,145 @@ Candidate receives the update and continues the conversation
 
 ## Feature walkthroughs
 
-Every functional screenshot in [`material/Screenshots of working features`](<material/Screenshots of working features>) is included below. The numbered galleries are collapsed by default and use compact previews; select a feature to expand its evidence.
+Every functional screenshot in [`material/Screenshots of working features`](<material/Screenshots of working features>) is shown below. Compact previews keep the complete feature set easy to scan.
 
 ### Candidate Android app
 
-<details>
-<summary><strong>1. Career profile and resume</strong> — maintain the profile, photo and default resume used for applications and recommendations.</summary>
+<h3>1. Career profile and resume</h3>
+
+<p>Maintain the profile, photo and default resume used for applications and recommendations.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/edit%20profile%201.png" alt="Candidate profile editor" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/edit%20profile%202.png" alt="Candidate profile fields" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/resume%201.png" alt="Candidate resume editor" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Career%20Profile%20and%20Resume/resume%202.png" alt="Candidate resume details" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>2. Job preferences and exclusions</strong> — set preferences that shape recommended roles and filters.</summary>
+<h3>2. Job preferences and exclusions</h3>
+
+<p>Set preferences that shape recommended roles and filters.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Preferences%20and%20Exclusions/filter%20jobs.png" alt="Candidate job preferences" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>3. Search, filter and view jobs</strong> — search roles, apply structured filters and inspect the full job description.</summary>
+<h3>3. Search, filter and view jobs</h3>
+
+<p>Search roles, apply structured filters and inspect the full job description.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Search%20Jobs/search%20job.png" alt="Job search" width="200" /> <img src="material/Screenshots%20of%20working%20features/Search%20Jobs/job%20filter.png" alt="Job filters" width="200" /> <img src="material/Screenshots%20of%20working%20features/Search%20Jobs/job%20detail.png" alt="Job detail" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>4. Intelligent job recommendations</strong> — show match scores, matching skills and explainable skill gaps.</summary>
+<h3>4. Intelligent job recommendations</h3>
+
+<p>Show match scores, matching skills and explainable skill gaps.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Receive%20Intelligent%20Job%20Recommendations/AI%20recommendation%201.png" alt="AI recommendation" width="200" /> <img src="material/Screenshots%20of%20working%20features/Receive%20Intelligent%20Job%20Recommendations/AI%20recommendation%202.png" alt="AI recommendation analysis" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>5. Save jobs</strong> — bookmark roles and revisit the saved-job list or a saved role's detail.</summary>
+<h3>5. Save jobs</h3>
+
+<p>Bookmark roles and revisit the saved-job list or a saved role's detail.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20%EF%BC%88click%20star%EF%BC%89.png" alt="Save a job" width="200" /> <img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20details.png" alt="Saved job detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Save%20Jobs/save%20job%20entrance.png" alt="Saved jobs entry" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>6. Apply for jobs</strong> — review the role, confirm the default-resume submission and receive a recorded result.</summary>
+<h3>6. Apply for jobs</h3>
+
+<p>Review the role, confirm the default-resume submission and receive a recorded result.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/job%20detail.png" alt="Apply from job detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/confirm%20application.png" alt="Confirm application" width="200" /> <img src="material/Screenshots%20of%20working%20features/Apply%20for%20Jobs/application%20submitted.png" alt="Application submitted" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>7. Track and withdraw applications</strong> — view application states, interview activity and, where permitted, withdraw a submission.</summary>
+<h3>7. Track and withdraw applications</h3>
+
+<p>View application states, interview activity and, where permitted, withdraw a submission.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/View%20Career%20Dashboard/career%20dashboard.png" alt="Career dashboard" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%201.png" alt="Application tracking" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%202.png" alt="Application progress" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/track%20applications%203.png" alt="Application interview detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Track%20and%20Withdraw%20Applications/withdraw%20applications.png" alt="Withdraw application" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>8. Communicate with recruiters</strong> — open a conversation and exchange interview notifications, files and images.</summary>
+<h3>8. Communicate with recruiters</h3>
+
+<p>Open a conversation and exchange interview notifications, files and images.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Recruiters/message%20entrance.png" alt="Candidate message entry" width="200" /> <img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Recruiters/message%20detail.png" alt="Candidate recruiter conversation" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>9. Participate in the career community</strong> — browse, publish, like and comment on categorised career discussions.</summary>
+<h3>9. Participate in the career community</h3>
+
+<p>Browse, publish, like and comment on categorised career discussions.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/community%20page.png" alt="Community feed" width="200" /> <img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/create%20post.png" alt="Create community post" width="200" /> <img src="material/Screenshots%20of%20working%20features/Participate%20in%20Career%20Community/like%26commit%20post.png" alt="Like and comment on post" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>10. Candidate AI Agent</strong> — turn a natural-language request into a previewed, confirmed resume-management change.</summary>
+<h3>10. Candidate AI Agent</h3>
+
+<p>Turn a natural-language request into a previewed, confirmed resume-management change.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%201.png" alt="Candidate Agent request" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%202.png" alt="Candidate Agent preview" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%203.png" alt="Candidate Agent confirmation" width="200" /> <img src="material/Screenshots%20of%20working%20features/AI%20Agent%20for%20Resume%20Management/agent%20summary.png" alt="Candidate Agent result" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>11. Authentication, password reset and onboarding</strong> — register, sign in and reset a password through an emailed verification code before completing essential candidate information.</summary>
+<h3>11. Authentication, password reset and onboarding</h3>
+
+<p>Register, sign in and reset a password through an emailed verification code before completing essential candidate information.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/authentication%26log%20in.png" alt="Recruiter sign in" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/log%20in%20successfully.png" alt="Successful sign in" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/password%20reset%201.png" alt="Request password reset" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/password%20reset%202.png" alt="Verify password reset code" width="200" /> <img src="material/Screenshots%20of%20working%20features/Authentication%20and%20Password%20Reset/email.jpg" alt="Password reset verification email" width="200" /></p>
-</details>
 
 ### Recruiter web workspace
 
-<details>
-<summary><strong>12. Recruitment dashboard</strong> — summarise active roles, applications, reviews, interviews and company verification.</summary>
+<h3>12. Recruitment dashboard</h3>
+
+<p>Summarise active roles, applications, reviews, interviews and company verification.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/View%20Recruitment%20Dashboard/recruitment%20dashboard.png" alt="Recruiter dashboard" width="300" /></p>
-</details>
 
-<details>
-<summary><strong>13. Manage job postings</strong> — create roles, inspect their detail and control their publication state and applicants.</summary>
+<h3>13. Manage job postings</h3>
+
+<p>Create roles, inspect their detail and control their publication state and applicants.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/create%20job.png" alt="Create job" width="240" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/job%20page.png" alt="Job management" width="240" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Job%20Postings/job%20details.png" alt="Job posting detail" width="240" /></p>
-</details>
 
-<details>
-<summary><strong>14. Manage company profile</strong> — maintain the company information candidates see with job listings.</summary>
+<h3>14. Manage company profile</h3>
+
+<p>Maintain the company information candidates see with job listings.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Manage%20Company%20Profile/company%20profile.png" alt="Recruiter company profile" width="300" /></p>
-</details>
 
-<details>
-<summary><strong>15. Communicate with candidates</strong> — begin and manage proactive candidate conversations.</summary>
+<h3>15. Communicate with candidates</h3>
+
+<p>Begin and manage proactive candidate conversations.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Candidates/communicate%20entrance.png" alt="Recruiter message entry" width="240" /> <img src="material/Screenshots%20of%20working%20features/Communicate%20with%20Candidates/communicate%20details.png" alt="Recruiter candidate conversation" width="240" /></p>
-</details>
 
-<details>
-<summary><strong>16. Discover and rank candidates</strong> — review recommended candidates for a role and start outreach.</summary>
+<h3>16. Discover and rank candidates</h3>
+
+<p>Review recommended candidates for a role and start outreach.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Discover%20and%20Rank%20Candidates/discover%20%26%20rank%20candidates.png" alt="Candidate discovery and ranking" width="300" /></p>
-</details>
 
-<details>
-<summary><strong>17. Recruiter AI screening and interview Agent</strong> — start an HR Agent conversation and receive ranked candidate screening results before action.</summary>
+<h3>17. Recruiter AI screening and interview Agent</h3>
+
+<p>Start an HR Agent conversation and receive ranked candidate screening results before action.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Recruiter%20AI%20Screening%20and%20Interview%20Agent/AI%20agent%20start%20page.png" alt="Recruiter Agent start page" width="240" /> <img src="material/Screenshots%20of%20working%20features/Recruiter%20AI%20Screening%20and%20Interview%20Agent/use%20agent%20to%20find%20candidate.png" alt="Recruiter Agent screening" width="240" /></p>
-</details>
 
-<details>
-<summary><strong>18. Review applications and manage the candidate pipeline</strong> — review resumes and Candidate Fit, then progress candidates through Submitted, Review, Interview and Outcome.</summary>
+<h3>18. Review applications and manage the candidate pipeline</h3>
+
+<p>Review resumes and Candidate Fit, then progress candidates through Submitted, Review, Interview and Outcome.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Review%20Applications/application%20page.png" alt="Recruiter applications list" width="200" /> <img src="material/Screenshots%20of%20working%20features/Review%20Applications/application%20details.png" alt="Recruiter application detail" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/View%20application%20pipeline.png" alt="Application pipeline" width="200" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Review%20application.png" alt="Review application" width="200" /></p>
-</details>
 
-<details>
-<summary><strong>19. Schedule interviews and record outcomes</strong> — schedule online Google Meet, on-site or phone interviews, access the meeting link and record an offer or rejection.</summary>
+<h3>19. Schedule interviews and record outcomes</h3>
+
+<p>Schedule online Google Meet, on-site or phone interviews, access the meeting link and record an offer or rejection.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%201.png" alt="Schedule interview" width="180" /> <img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%202.png" alt="Google Meet interview schedule" width="180" /> <img src="material/Screenshots%20of%20working%20features/Schedule%20Interviews/schedule%20interview%203.png" alt="Scheduled interview" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Schedule%20interview.png" alt="Schedule interview from pipeline" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Visit%20interview%20meet%20link%20.png" alt="Google Meet link" width="180" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Candidate%20Pipeline/Make%20offer.png" alt="Make offer" width="180" /></p>
-</details>
 
 ### Administrator web workspace
 
-<details>
-<summary><strong>20. Restricted administrator access and account management</strong> — use controlled administrator sign-in, manage accounts and grant platform access.</summary>
+<h3>20. Restricted administrator access and account management</h3>
+
+<p>Use controlled administrator sign-in, manage accounts and grant platform access.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Admin/1.png" alt="Administrator sign in" width="220" /> <img src="material/Screenshots%20of%20working%20features/Admin/2.png" alt="Administrator accounts" width="220" /> <img src="material/Screenshots%20of%20working%20features/Manage%20Users/manage%20users.png" alt="Administrator manages users" width="220" /></p>
-</details>
 
-<details>
-<summary><strong>21. Review companies and maintain company information</strong> — inspect company submissions and record an approval or rejection decision.</summary>
+<h3>21. Review companies and maintain company information</h3>
+
+<p>Inspect company submissions and record an approval or rejection decision.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Admin/3.png" alt="Administrator company reviews" width="260" /> <img src="material/Screenshots%20of%20working%20features/Review%20Companies/review%20companies.png" alt="Review company" width="260" /></p>
-</details>
 
-<details>
-<summary><strong>22. Review the administrator audit log</strong> — trace administrative actions, affected records, reasons and request identifiers.</summary>
+<h3>22. Review the administrator audit log</h3>
+
+<p>Trace administrative actions, affected records, reasons and request identifiers.</p>
 
 <p><img src="material/Screenshots%20of%20working%20features/Admin/4.png" alt="Administrator audit log" width="260" /> <img src="material/Screenshots%20of%20working%20features/View%20Administrator%20Audit%20Log/audit%20log.png" alt="Audit log entries" width="260" /></p>
-</details>
 
 ## Architecture and technology
 
@@ -282,6 +282,7 @@ cd android && ./gradlew testDebugUnitTest lintDebug assembleDebug
 
 ## Documentation
 
+- [Project architecture and business flows (Chinese)](docs/PROJECT_ARCHITECTURE_AND_BUSINESS_FLOWS.zh-CN.md)
 - [Product requirements](docs/product-requirements.md)
 - [User flows](docs/user-flows.md)
 - [System architecture](docs/architecture.md)
