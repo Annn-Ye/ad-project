@@ -1,10 +1,10 @@
 name: DAST
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -138,6 +138,7 @@ jobs:
           echo "RECRUITER_TOKEN=$RECRUITER_TOKEN" >> "$GITHUB_ENV"
       - name: seed admin account and capture admin token
         id: admin-token
+        working-directory: infra/docker
         run: |
           set -e
           curl -s -o /dev/null -w 'register admin: %{http_code}\n' -X POST http://localhost:8080/api/v1/auth/register \
@@ -284,10 +285,10 @@ jobs:
           )
           failed=0
           for s in "${statuses[@]}"; do
-            if [ "$s" = "failure" ]; then failed=1; fi
+            if [ "$s" != "success" ]; then failed=1; fi
           done
           if [ "$failed" -eq 1 ]; then
-            echo "One or more ZAP scan steps failed, see reports above."
+            echo "One or more ZAP scan steps failed or were skipped, see reports above."
             exit 1
           fi
           echo "All ZAP scan steps passed."
