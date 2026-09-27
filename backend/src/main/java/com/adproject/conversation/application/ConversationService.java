@@ -35,6 +35,8 @@ import com.adproject.conversation.infrastructure.MessageEntity;
 import com.adproject.conversation.infrastructure.MessageRepository;
 import com.adproject.job.infrastructure.JobEntity;
 import com.adproject.job.infrastructure.JobRepository;
+import com.adproject.job.domain.JobStatus;
+import com.adproject.job.domain.Visibility;
 import com.adproject.profile.infrastructure.CandidateProfileRepository;
 import com.adproject.user.domain.UserRole;
 import com.adproject.user.infrastructure.UserEntity;
@@ -158,6 +160,30 @@ public class ConversationService {
     public void updateReadStateCandidate(AuthenticatedUser principal, String conversationId, ReadStateRequest request) {
         ConversationEntity conversation = requireCandidateConversation(principal, conversationId);
         updateReadState(conversation, principal.userId(), request);
+    }
+
+    /**
+     * Opens the one Candidate-initiated inquiry for a public active job. It deliberately does
+     * not require an application: this is the Candidate's pre-application contact entry point.
+     * The existing uniqueness key includes type, job, candidate, company and recruiter, making
+     * repeated taps safe without a new schema migration.
+     */
+    @Transactional
+    public DetailResponse startCandidateInquiry(AuthenticatedUser principal, String jobId) {
+        requireCandidate(principal);
+        JobEntity job = jobs.findById(requireUuid(jobId, "jobId"))
+                .filter(value -> value.getStatus() == JobStatus.ACTIVE)
+                .filter(value -> value.getVisibility() == Visibility.PUBLIC)
+                .orElseThrow(this::notFound);
+        String recruiterId = job.getOwnerId() != null ? job.getOwnerId() : job.getCreatedBy();
+        users.findById(recruiterId).filter(value -> value.getRole() == UserRole.RECRUITER)
+                .orElseThrow(this::notFound);
+        ConversationEntity conversation = conversations
+                .findByConversationTypeAndJobIdAndCandidateIdAndCompanyIdAndInitiatorRecruiterId(
+                        ConversationType.CANDIDATE_INQUIRY, job.getId(), principal.userId(), job.getCompanyId(), recruiterId)
+                .orElseGet(() -> conversations.save(ConversationEntity.candidateInquiry(UUID.randomUUID().toString(),
+                        job.getId(), principal.userId(), job.getCompanyId(), recruiterId, clock.instant())));
+        return new DetailResponse(detail(conversation, principal.userId()));
     }
 
     // ---- Recruiter endpoints ----

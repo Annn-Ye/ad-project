@@ -82,6 +82,11 @@ private fun JobDetailContent(state: JobDetailUiState, onBack: () -> Unit, onAppl
                 .padding(horizontal = 18.dp, vertical = 6.dp),
                 color = Color(0xFFB42318), fontSize = 12.sp)
         }
+        state.conversationError?.let { message ->
+            Text(message, Modifier.fillMaxWidth().background(Color.White)
+                .padding(horizontal = 18.dp, vertical = 6.dp),
+                color = Color(0xFFB42318), fontSize = 12.sp)
+        }
         Row(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 18.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             SecondaryButton(data.job.match?.let { "AI Match $it%" } ?: "Match unavailable", {},
                 Modifier.weight(1f), enabled = false)
@@ -162,7 +167,8 @@ private fun JobDetailContent(state: JobDetailUiState, onBack: () -> Unit, onAppl
                         Text(recruiter.fullName, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                         Text("${recruiter.title} · ${data.job.company}", color = AdMuted, fontSize = 10.sp)
                     }
-                    PrimaryButton("Message", onMessageRecruiter)
+                    PrimaryButton(if (state.startingConversation) "Opening…" else "Message", onMessageRecruiter,
+                        enabled = !state.startingConversation)
                 }
             } }
             Spacer(Modifier.height(10.dp))

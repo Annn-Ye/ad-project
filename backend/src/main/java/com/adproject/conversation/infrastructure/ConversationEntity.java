@@ -52,6 +52,25 @@ public class ConversationEntity {
         return conversation;
     }
 
+    /**
+     * A candidate may contact the owner of a publicly visible job before applying.  The recruiter
+     * id is intentionally retained so the existing conversation uniqueness key also makes this
+     * operation idempotent for a Candidate/job/Recruiter combination.
+     */
+    public static ConversationEntity candidateInquiry(String id, String jobId, String candidateId, String companyId,
+                                                      String recruiterId, Instant now) {
+        ConversationEntity conversation = new ConversationEntity();
+        conversation.id = id;
+        conversation.conversationType = ConversationType.CANDIDATE_INQUIRY;
+        conversation.jobId = jobId;
+        conversation.candidateId = candidateId;
+        conversation.companyId = companyId;
+        conversation.initiatorRecruiterId = recruiterId;
+        conversation.createdAt = now;
+        conversation.updatedAt = now;
+        return conversation;
+    }
+
     public String getId() { return id; }
     public ConversationType getConversationType() { return conversationType; }
     public String getApplicationId() { return applicationId; }

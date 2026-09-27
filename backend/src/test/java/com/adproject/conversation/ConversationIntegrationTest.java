@@ -107,6 +107,31 @@ class ConversationIntegrationTest {
                 .andExpect(jsonPath("$.data[0].unreadCount").value(0));
     }
 
+    @Test void candidateCanStartOneInquiryForAnActivePublicJobAndSendMessage() throws Exception {
+        Fixture f = fixture("Candidate Inquiry");
+        String jobId = job(f, "Inquiry Job");
+        String first = mvc.perform(post("/api/v1/candidate/conversations/job/{jobId}", jobId)
+                        .header("Authorization", candidate(f)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.conversationType").value("CANDIDATE_INQUIRY"))
+                .andReturn().getResponse().getContentAsString();
+        String conversationId = mapper.readTree(first).at("/data/conversationId").asText();
+
+        mvc.perform(post("/api/v1/candidate/conversations/job/{jobId}", jobId)
+                        .header("Authorization", candidate(f)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.conversationId").value(conversationId));
+        assertThat(jdbc.queryForObject("select count(*) from conversations where id=? and application_id is null "
+                + "and conversation_type='CANDIDATE_INQUIRY'", Integer.class, conversationId)).isEqualTo(1);
+
+        String messageId = send(candidate(f), conversationId, UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(), "Can I ask a question about this role?");
+        mvc.perform(get("/api/v1/recruiter/conversations/{id}/messages", conversationId)
+                        .header("Authorization", recruiter(f)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].messageId").value(messageId));
+    }
+
     @Test void recruiterSendsMessageWithoutAnyGoogleConnection() throws Exception {
         Fixture f = fixture("Recruiter Send Candidate");
         String applicationId = submit(f, job(f, "Recruiter Send Job"), UUID.randomUUID().toString());
@@ -265,6 +290,14 @@ class ConversationIntegrationTest {
         String conversationId = conversationId(applicationId);
 
         mvc.perform(get("/api/v1/candidate/conversations")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/v1/candidate/conversations/job/{jobId}", jobId))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/v1/candidate/conversations/job/{jobId}", jobId)
+                        .header("Authorization", recruiter(f)))
+                .andExpect(status().isForbidden());
+        mvc.perform(post("/api/v1/candidate/conversations/job/{jobId}", UUID.randomUUID())
+                        .header("Authorization", candidate(f)))
+                .andExpect(status().isNotFound());
         mvc.perform(get("/api/v1/recruiter/conversations").header("Authorization", candidate(f)))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/api/v1/candidate/conversations").header("Authorization", recruiter(f)))

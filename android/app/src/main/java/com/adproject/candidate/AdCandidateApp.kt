@@ -453,7 +453,12 @@ fun AdCandidateApp(
                     factory = CommunityDetailViewModel.factory(postId, container.communityRepository),
                 )
                 val state by detailViewModel.state.collectAsStateWithLifecycle()
-                LaunchedEffect(state.directConversationId) { state.directConversationId?.let { navController.navigate(Route.communityDirect(it)) } }
+                LaunchedEffect(state.directConversationId) {
+                    state.directConversationId?.let {
+                        detailViewModel.consumeDirectConversationNavigation()
+                        navController.navigate(Route.communityDirect(it))
+                    }
+                }
                 CommunityDetailScreen(
                     state = state, onBack = {
                         state.post?.let(communityViewModel::applyPostUpdate)
@@ -522,9 +527,16 @@ fun AdCandidateApp(
                 val jobId = entry.arguments?.getString("jobId") ?: "moonshot"
                 val detailViewModel: JobDetailViewModel = viewModel(
                     key = "job-detail-$jobId",
-                    factory = JobDetailViewModel.factory(jobId, container.candidateJobRepository),
+                    factory = JobDetailViewModel.factory(jobId, container.candidateJobRepository,
+                        container.candidateConversationRepository),
                 )
                 val state by detailViewModel.state.collectAsStateWithLifecycle()
+                LaunchedEffect(state.conversationId) {
+                    state.conversationId?.let { conversationId ->
+                        detailViewModel.consumeConversationNavigation()
+                        navController.navigate(Route.chatDetail(conversationId))
+                    }
+                }
                 JobDetailScreen(
                     state = state,
                     onBack = { navigateBack(Route.Jobs) },
@@ -533,7 +545,7 @@ fun AdCandidateApp(
                     onViewCompany = { navController.navigate(Route.companyProfile(it)) },
                     onViewRecruiter = { navController.navigate(Route.recruiterProfile(it)) },
                     onToggleSave = detailViewModel::toggleSave,
-                    onMessageRecruiter = { openTab(MainTab.Messages) },
+                    onMessageRecruiter = detailViewModel::messageRecruiter,
                 )
             }
             composable(Route.RecruiterProfile) { entry ->

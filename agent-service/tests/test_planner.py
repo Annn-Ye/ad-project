@@ -33,14 +33,14 @@ def chat_response(message: str = "Hello! How can I help with your resume?") -> P
 def test_without_api_key_returns_503_with_safe_code() -> None:
     response = client.post(
         "/internal/v1/agent/plan",
-        json={"instruction": "把年龄改成 28"},
+        json={"instruction": "hello"},
     )
 
     assert response.status_code == 503
     assert response.json() == {"detail": "no_api_key"}
 
 
-def test_plan_delegates_to_deepseek_planner(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_explicit_age_change_uses_stable_rules_without_calling_provider(monkeypatch: pytest.MonkeyPatch) -> None:
     stub = StubPlanner(response=chat_response())
     monkeypatch.setattr(planner, "deepseek_planner", stub)
 
@@ -57,19 +57,27 @@ def test_plan_delegates_to_deepseek_planner(monkeypatch: pytest.MonkeyPatch) -> 
 
     assert response.status_code == 200
     assert response.json() == {
-        "status": "CHAT",
-        "intent": "CHAT",
-        "target": None,
-        "operations": [],
-        "message": "Hello! How can I help with your resume?",
+        "status": "READY",
+        "intent": "UPDATE_RESUME",
+        "target": "DEFAULT_RESUME",
+        "operations": [
+            {"tool": "get_my_resume", "arguments": {}},
+            {"tool": "preview_resume_patch", "arguments": {"field": "age", "action": "set", "value": 28}},
+        ],
+        "message": "I can prepare a preview to set your default resume age to 28.",
     }
-    assert len(stub.requests) == 1
-    request = stub.requests[0]
-    assert request.instruction == "把年龄改成 28"
-    assert [message.content for message in request.history] == [
-        "帮我修改年龄",
-        "What age should be set on your default resume?",
-    ]
+    assert stub.requests == []
+
+
+def test_generic_resume_change_is_consistently_clarified_without_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+    stub = StubPlanner(response=chat_response())
+    monkeypatch.setattr(planner, "deepseek_planner", stub)
+
+    response = client.post("/internal/v1/agent/plan", json={"instruction": "帮我修改简历"})
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "NEEDS_CLARIFICATION"
+    assert stub.requests == []
 
 
 def test_planner_failure_returns_503_with_provider_code(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -77,7 +85,7 @@ def test_planner_failure_returns_503_with_provider_code(monkeypatch: pytest.Monk
 
     response = client.post(
         "/internal/v1/agent/plan",
-        json={"instruction": "查看技能"},
+        json={"instruction": "provider failure"},
     )
 
     assert response.status_code == 503

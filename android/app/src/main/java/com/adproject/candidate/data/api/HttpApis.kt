@@ -194,6 +194,9 @@ interface CandidateConversationHttpApi {
     @GET("candidate/conversations/{conversationId}")
     suspend fun conversation(@Path("conversationId") conversationId: String): Response<DataEnvelope<ConversationDetail>>
 
+    @POST("candidate/conversations/job/{jobId}")
+    suspend fun startInquiry(@Path("jobId") jobId: String): Response<DataEnvelope<ConversationDetail>>
+
     @GET("candidate/conversations/{conversationId}/messages")
     suspend fun messages(
         @Path("conversationId") conversationId: String,

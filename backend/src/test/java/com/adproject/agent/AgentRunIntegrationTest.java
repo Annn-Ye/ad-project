@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.adproject.auth.application.JwtService;
+import com.adproject.profile.infrastructure.CandidateProfileEntity;
+import com.adproject.profile.infrastructure.CandidateProfileRepository;
 import com.adproject.resume.infrastructure.ResumeEntity;
 import com.adproject.resume.infrastructure.ResumeRepository;
 import com.adproject.user.domain.UserRole;
@@ -52,6 +54,7 @@ class AgentRunIntegrationTest {
     @Autowired MockMvc mvc;
     @Autowired UserRepository users;
     @Autowired ResumeRepository resumes;
+    @Autowired CandidateProfileRepository profiles;
     @Autowired JwtService jwt;
     @Autowired ObjectMapper mapper;
     @Autowired JdbcTemplate jdbc;
@@ -244,6 +247,7 @@ class AgentRunIntegrationTest {
         assertThat(updated.getAge()).isEqualTo(28);
         assertThat(updated.getVersion()).isEqualTo(2);
         assertThat(updated.getSummary()).isEqualTo("Private resume summary");
+        assertThat(profiles.findById(candidate.userId()).orElseThrow().getAge()).isEqualTo(28);
 
         mvc.perform(post("/api/v1/agent/runs/{runId}/confirm", runId)
                         .header("Authorization", bearer(candidate))
@@ -542,6 +546,8 @@ class AgentRunIntegrationTest {
         String resumeId = null;
         if (withResume) {
             resumeId = UUID.randomUUID().toString();
+            profiles.save(new CandidateProfileEntity(user.getId(), "Engineer", "Shanghai", age,
+                    null, null, null, 1, now, now));
             resumes.save(new ResumeEntity(resumeId, user.getId(), "Agent User", age, "Shanghai",
                     "Engineer", "Private resume summary", "[]", 1, now, now));
         }
